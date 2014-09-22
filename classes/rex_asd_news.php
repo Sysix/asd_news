@@ -95,7 +95,7 @@ class rex_asd_news
     public function getMonthName($lang = 'de')
     {
         $date = $this->getPublishDate();
-        $varName = 'month_'.$lang;
+        $varName = 'month_' . $lang;
 
         $name = self::$$varName;
 
@@ -314,13 +314,36 @@ class rex_asd_news
      *
      * @param int $newsId
      * @param int|null $clang
-     * @return self
+     * @return array
      */
     public static function getNewsById($newsId, $clang = null)
     {
         $news = self::getByWhere('`id` = ' . (int)$newsId, $clang);
 
         return $news[0];
+    }
+
+    /**
+     * @return array
+     */
+    public static function getAllNews($clang = null)
+    {
+        return self::getByWhere('1 = 1', $clang);
+    }
+
+    /**
+     * @param DateTime $date
+     * @param null|DateTime $date2
+     * @return array
+     */
+    public static function getNewsByPublishDate(DateTime $date, $date2 = null)
+    {
+        if ($date2 == null) {
+            return self::getByWhere('`publishedAt` <= ' . $date->format('Y-m-d H:i:s'));
+        }
+
+        return self::getByWhere('`publishedAt` BETWEEN "' . $date->format('Y-m-d H:i:s') . '"
+                                                   AND "' . $date2->format('Y-m-d H:i:s') . '"');
     }
 
     /**
@@ -346,7 +369,7 @@ class rex_asd_news
         FROM `' . $REX['TABLE_PREFIX'] . 'asd_news`
         WHERE ' . $where . '
           AND `clang` = ' . (int)$clang . '
-          AND `publishedAt` BETWEEN "0000-00-00 00:01:00" AND "'.date('Y-m-d H:i:s').'"
+          AND `publishedAt` BETWEEN "0000-00-00 00:01:00" AND "' . date('Y-m-d H:i:s') . '"
         ORDER BY `publishedAt`');
 
         for ($i = 1; $i <= $sql->getRows(); $i++) {
@@ -403,27 +426,6 @@ class rex_asd_news
         }
 
         return 0;
-    }
-
-    public static function publishNews() {
-        global $REX;
-
-        $sql = new rex_sql();
-        $sql->setWhere('
-        SELECT `id`
-        FROM `' . $REX['TABLE_PREFIX'] . 'asd_news`
-        WHERE `publishedAt` <= "'.date('Y-m-d H:i:s').'"
-          AND `publishedAt` != "0000-00-00 00:00:00"');
-
-        for($i = 1; $i <= $sql->getRows(); $i++) {
-            $save = new sql();
-            $save->setTable($REX['TABLE_PREFIX'] . 'asd_news');
-            $save->setWhere('`id` = '.$sql->getValue('id'));
-            $save->setValue('status', 1);
-            $save->update();
-
-            $sql->next();
-        }
     }
 
 }

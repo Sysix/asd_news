@@ -51,6 +51,27 @@ if($func == 'update') {
                         </p>
                     </div>
                 </div>
+                <legend><?php echo $I18N->msg('asd_news_include_css'); ?></legend>
+                <div class="rex-form-wrapper">
+                    <?php
+
+                        foreach(array(
+                                'false' => $I18N->msg('no'),
+                                'true' => $I18N->msg('yes')
+                            ) as $value => $description) {
+
+                        $checked = ($value == $config['include-css']) ? ' checked="checked"' : '';
+
+                        ?>
+                        <div class="rex-form-row">
+                            <p class="rex-form-radio rex-form-label-right">
+                                <input class="rex-form-radio" type="radio" name="include-css" value="<?php echo $value ?>"<?php echo $checked ?>>
+                                <label><?php echo $description ?></label>
+                            </p>
+                        </div>
+                    <?php
+                    }
+                    ?>
             </fieldset>
             <fieldset class="rex-form-col-1">
                 <legend><?php echo $I18N->msg('asd_news_settings_published_by'); ?></legend>

@@ -23,7 +23,7 @@ $REX['ADDON']['asd_news']['SUBPAGES'] = array(
 );
 
 // set config
-$REX['ADDON']['asd_news']['configFile'] = rex_path::addon('asd_news', 'config.json');
+$REX['ADDON']['asd_news']['configFile'] = rex_path::addon('asd_news', 'data/config.json');
 $REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON']['asd_news']['configFile']), true);
 
 // Metainfo
@@ -55,6 +55,7 @@ require_once rex_path::addon('asd_news', 'functions/rex_asd_news_language.php');
 require_once rex_path::addon('asd_news', 'functions/asd_news_jquery.php');
 require_once rex_path::addon('asd_news', 'classes/rex_news_form.php');
 require_once rex_path::addon('asd_news', 'classes/rex_asd_news.php');
+require_once rex_path::addon('asd_news', 'classes/rex_asd_news_utils.php');
 
 // Seo Addon setzen
 foreach(array('rexseo', 'yrewrite', 'seo42') as $seoAddon) {
@@ -67,6 +68,13 @@ foreach(array('rexseo', 'yrewrite', 'seo42') as $seoAddon) {
 if(!is_null(rex_asd_news::$SEO_ADDON)) {
     rex_asd_news::$SEO_URL_CONTROL = OOPlugin::isAvailable(rex_asd_news::$SEO_ADDON, 'url_control');
 }
+
+// SEO Sitemap.xml
+/*
+rex_register_extension('REXSEO_SITEMAP_ARRAY_CREATED', function($params) {
+    rex_asd_news_utils::addNewstoSitemap($params);
+});
+*/
 
 
 if($REX['REDAXO']) {
@@ -121,6 +129,22 @@ if($REX['REDAXO']) {
 
             array_push($REX['ADDON']['asd_news']['SUBPAGES'], array($name, $I18N->msg('asd_news_'.$name)));
         }
+    }
+
+} else {
+
+    if($REX['ADDON']['asd_news']['config']['include-css']) {
+
+        rex_register_extension('OUTPUT_FILTER', function($params) use ($REX) {
+
+            return str_replace(
+                    '</head>',
+                    '<link href="'.$REX['MEDIA_ADDON_DIR'].'/asd_news/news.css" rel="stylesheet"></head>',
+                    $params['subject']
+            );
+
+        });
+
     }
 
 }

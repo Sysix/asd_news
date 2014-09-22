@@ -22,8 +22,8 @@ if ($news_id) {
     ?>
     <div class="asd-news" id="news-<?php echo $id; ?>">
         <h3><?php echo $title; ?></h3>
-        <b><?php echo $date->format('d. ').$news->getMonthName().$date->format(' Y H:i'); ?></b><br />
-        <img src="<?php echo $news->getImage() ?>" alt="" >
+        <img src="<?php echo $news->getImage() ?>" alt="" class="news-picture">
+        <span class="asd-news-date"><?php echo $date->format('d. ').$news->getMonthName().$date->format(' Y H:i'); ?></span>
         <?php echo $text; ?>
     </div>
     <?php

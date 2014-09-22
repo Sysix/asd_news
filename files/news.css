@@ -1,0 +1,19 @@
+.asd-news {
+    position:relative;
+    clear:both;
+    margin:3px 0;
+}
+
+.asd-news h3 {
+
+}
+
+.asd-picture {
+    margin:3px 0;
+    border:2px solid #fff;
+}
+
+.asd-news-date {
+    font-weight: bold;
+    margin:2px 0 8px 0;
+}
