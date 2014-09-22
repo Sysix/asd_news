@@ -20,18 +20,32 @@ if(!function_exists('asd_filterPosts')) {
 
 if($func == 'update') {
 
+    $sendit = rex_request('sendit');
+    $installModul = rex_request('modul');
+
     $saves = asd_filterPosts(array(
         'max-per-page' => 'int',
-        'published-lang' => 'string'
+        'published-lang' => 'string',
+        'include-css' => 'string'
     ));
 
     if($saves['max-per-page'] < 1 ||$saves['max-per-page'] > 50) {
         $saves['max-per-page'] = 50;
     }
 
-    $config = array_merge($config, $saves);
+    if($sendit) {
 
-    file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($saves));
+        $config = array_merge($config, $saves);
+
+        file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($saves));
+
+    }
+
+    if($installModul) {
+
+        echo 'MOdul';
+
+    }
 
 }
 ?>
@@ -79,28 +93,41 @@ if($func == 'update') {
                     <?php
 
                     foreach(array(
-                        'single' => $I18N->msg('asd_news_current_lang'),
-                        'all' => $I18N->msg('asd_news_all_lang')
-                    ) as $value => $description) {
+                                'single' => $I18N->msg('asd_news_current_lang'),
+                                'all' => $I18N->msg('asd_news_all_lang')
+                            ) as $value => $description) {
 
                         $checked = ($value == $config['published-lang']) ? ' checked="checked"' : '';
 
-                    ?>
-                    <div class="rex-form-row">
-                        <p class="rex-form-radio rex-form-label-right">
-                            <input class="rex-form-radio" type="radio" name="published-lang" value="<?php echo $value ?>"<?php echo $checked ?>>
-                            <label><?php echo $description ?></label>
-                        </p>
-                    </div>
+                        ?>
+                        <div class="rex-form-row">
+                            <p class="rex-form-radio rex-form-label-right">
+                                <input class="rex-form-radio" type="radio" name="published-lang" value="<?php echo $value ?>"<?php echo $checked ?>>
+                                <label><?php echo $description ?></label>
+                            </p>
+                        </div>
                     <?php
                     }
                     ?>
                 </div>
             </fieldset>
             <fieldset class="rex-form-col-1">
+                <legend><?php echo $I18N->msg('modules'); ?></legend>
                 <div class="rex-form-wrapper">
-                    <div class="rex-form-row rex-form-element-v2">
-                        <p class="rex-form-submit">
+                    <div class="rex-form-row">
+                        <p class="rex-form-submit rex-form-submit-2">
+                            <input class="rex-form-submit" type="submit" id="modul" name="modul"
+                                   value="<?php echo $I18N->msg('asd_news_install_modul'); ?>"/>
+                        </p>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="rex-form-raw">
+                <legend></legend>
+                <div class="rex-form-wrapper">
+                    <div class="rex-form-row">
+                        <p class="rex-form-submit rex-form-submit-2">
+
                             <input class="rex-form-submit" type="submit" id="sendit" name="sendit"
                                    value="<?php echo $I18N->msg('submit'); ?>"/>
                         </p>

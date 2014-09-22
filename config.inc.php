@@ -11,7 +11,7 @@ $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';
 $REX['EXTPERM'][] = 'asd_news[publish]';
 $REX['EXTPERM'][] = 'asd_news[create]';
 
-if($REX['REDAXO']) {
+if ($REX['REDAXO']) {
     $I18N->appendFile(rex_path::addon('asd_news', 'lang' . DIRECTORY_SEPARATOR));
 }
 
@@ -28,14 +28,14 @@ $REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON'
 
 // Metainfo
 $page = rex_request('page', 'string', '');
-rex_register_extension('PAGE_CHECKED', function($params) use ($page, $REX, $I18N) {
+rex_register_extension('PAGE_CHECKED', function ($params) use ($page, $REX, $I18N) {
 
 
-    if($page == 'metainfo') {
+    if ($page == 'metainfo') {
 
         $metanews = new rex_be_page('News', array('page' => $page, 'subpage' => 'asd_news'));
         $metanews->setPath(rex_path::addon('asd_news', 'pages/metainfo.php'));
-        $metanews->setHref('index.php?page='.$page.'&subpage=asd_news');
+        $metanews->setHref('index.php?page=' . $page . '&subpage=asd_news');
 
         $mainPage = $params['pages'][$page]->getPage();
         $mainPage->addSubPage($metanews);
@@ -58,14 +58,14 @@ require_once rex_path::addon('asd_news', 'classes/rex_asd_news.php');
 require_once rex_path::addon('asd_news', 'classes/rex_asd_news_utils.php');
 
 // Seo Addon setzen
-foreach(array('rexseo', 'yrewrite', 'seo42') as $seoAddon) {
-    if(OOAddon::isAvailable($seoAddon)) {
+foreach (array('rexseo', 'yrewrite', 'seo42') as $seoAddon) {
+    if (OOAddon::isAvailable($seoAddon)) {
         rex_asd_news::$SEO_ADDON = $seoAddon;
     }
 }
 
 // url_control Plugin gesetzt?
-if(!is_null(rex_asd_news::$SEO_ADDON)) {
+if (!is_null(rex_asd_news::$SEO_ADDON)) {
     rex_asd_news::$SEO_URL_CONTROL = OOPlugin::isAvailable(rex_asd_news::$SEO_ADDON, 'url_control');
 }
 
@@ -77,29 +77,29 @@ rex_register_extension('REXSEO_SITEMAP_ARRAY_CREATED', function($params) {
 */
 
 
-if($REX['REDAXO']) {
+if ($REX['REDAXO']) {
 
     $page = rex_request('page');
     $func = rex_request('func');
 
-    if($page == 'asd_news') {
+    if ($page == 'asd_news') {
         rex_register_extension('PAGE_HEADER', 'asd_news_setjQueryTags');
 
-        if($func == 'publish') {
+        if ($func == 'publish') {
             $id = rex_post('id', 'int');
             $clang = rex_post('clang', 'int');
             try {
                 $time = new DateTime(rex_post('time'));
-            } catch(Exception $e) {
+            } catch (Exception $e) {
                 $time = new DateTime();
             }
 
             $sql = new rex_sql();
-            $sql->setTable($REX['TABLE_PREFIX'] .'asd_news');
-            $sql->setWhere('`id` = '.$id.' AND `clang` = '.$clang);
+            $sql->setTable($REX['TABLE_PREFIX'] . 'asd_news');
+            $sql->setWhere('`id` = ' . $id . ' AND `clang` = ' . $clang);
 
-            if($REX['ADDON']['asd_news']['config']['published-lang'] == 'all') {
-                $sql->setWhere('`id` = '.$id);
+            if ($REX['ADDON']['asd_news']['config']['published-lang'] == 'all') {
+                $sql->setWhere('`id` = ' . $id);
             }
 
             $sql->setValue('publishedAt', $time->format('Y-m-d H:i:s'));
@@ -109,8 +109,8 @@ if($REX['REDAXO']) {
             $sql->update();
 
             echo $time->format('Y-m-d H:i') . '
-        <a href="index.php?page=asd_news&subpage=news&clang='.$clang.'&func=unpublish&id='.$id.'">
-            <img src="../'.$REX['MEDIA_ADDON_DIR'].'/asd_news/unpublished.svg"
+        <a href="index.php?page=asd_news&subpage=news&clang=' . $clang . '&func=unpublish&id=' . $id . '">
+            <img src="../' . $REX['MEDIA_ADDON_DIR'] . '/asd_news/unpublished.svg"
             width="20" height="20" style="vertical-align: middle; margin-left: 5px">
         </a>';
             exit();
@@ -122,25 +122,25 @@ if($REX['REDAXO']) {
 
     // autoload Plugins
     $plugins = OOPlugin::getAvailablePlugins('asd_news');
-    foreach($plugins as $name) {
-        if(file_exists(rex_path::plugin('asd_news', $name, 'pages'.DIRECTORY_SEPARATOR.$name))) {
+    foreach ($plugins as $name) {
+        if (file_exists(rex_path::plugin('asd_news', $name, 'pages' . DIRECTORY_SEPARATOR . $name))) {
 
-            $I18N->appendFile(rex_path::plugin('asd_news', $name, 'lang'.DIRECTORY_SEPARATOR));
+            $I18N->appendFile(rex_path::plugin('asd_news', $name, 'lang' . DIRECTORY_SEPARATOR));
 
-            array_push($REX['ADDON']['asd_news']['SUBPAGES'], array($name, $I18N->msg('asd_news_'.$name)));
+            array_push($REX['ADDON']['asd_news']['SUBPAGES'], array($name, $I18N->msg('asd_news_' . $name)));
         }
     }
 
 } else {
 
-    if($REX['ADDON']['asd_news']['config']['include-css']) {
+    if ($REX['ADDON']['asd_news']['config']['include-css'] == "true") {
 
-        rex_register_extension('OUTPUT_FILTER', function($params) use ($REX) {
+        rex_register_extension('OUTPUT_FILTER', function ($params) use ($REX) {
 
             return str_replace(
-                    '</head>',
-                    '<link href="'.$REX['MEDIA_ADDON_DIR'].'/asd_news/news.css" rel="stylesheet"></head>',
-                    $params['subject']
+                '</head>',
+                '<link href="' . $REX['MEDIA_ADDON_DIR'] . '/asd_news/news.css" rel="stylesheet"></head>',
+                $params['subject']
             );
 
         });
