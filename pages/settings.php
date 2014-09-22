@@ -17,8 +17,6 @@ if(!function_exists('asd_filterPosts')) {
     }
 }
 
-
-
 if($func == 'update') {
 
     $saves = asd_filterPosts(array(
@@ -32,7 +30,7 @@ if($func == 'update') {
 
     $config = array_merge($config, $saves);
 
-    file_put_contents($configFile, json_encode($saves));
+    file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($saves));
 
 }
 ?>

@@ -19,8 +19,8 @@ $REX['ADDON']['asd_news']['SUBPAGES'] = array(
 );
 
 // set config
-$configFile = rex_path::addon('asd_news', 'config.json');
-$REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($configFile), true);
+$REX['ADDON']['asd_news']['configFile'] = rex_path::addon('asd_news', 'config.json');
+$REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON']['asd_news']['configFile']), true);
 
 // Metainfo
 $page = rex_request('page', 'string', '');
