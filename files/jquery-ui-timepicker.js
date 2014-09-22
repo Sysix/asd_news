@@ -298,6 +298,7 @@
             if (tp_inst._defaults.maxDateTime !== undefined && tp_inst._defaults.maxDateTime instanceof Date) {
                 tp_inst._defaults.maxDate = new Date(tp_inst._defaults.maxDateTime.getTime());
             }
+
             tp_inst.$input.bind('focus', function () {
                 tp_inst._onFocus();
 
@@ -1122,6 +1123,7 @@
                         var $t = $(this);
                         $t.datepicker.apply($t, tmp_args);
                     });
+
                 }
             } else {
                 return this.each(function () {
@@ -1129,6 +1131,7 @@
                     $t.datepicker($.timepicker._newInst($t, o)._defaults);
                 });
             }
+
         }
     });
 

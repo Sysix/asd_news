@@ -1,4 +1,5 @@
 <?php
+/** @var i18n $I18N */
 
 $func = rex_request('func', 'string');
 
@@ -41,24 +42,24 @@ if($func == 'update') {
             <input type="hidden" name="subpage" value="<?php echo $subpage; ?>"/>
             <input type="hidden" name="func" value="update"/>
             <fieldset class="rex-form-col-1">
-                <legend>Allgemeine Einstellungen</legend>
+                <legend><?php echo $I18N->msg('asd_news_settings_global'); ?></legend>
                 <div class="rex-form-wrapper">
                     <div class="rex-form-row">
                         <p class="rex-form-text">
-                            <label>Maximale Anzahl der News</label>
+                            <label><?php echo $I18N->msg('asd_news_settings_max_per_page'); ?></label>
                             <input class="rex-form-text" type="number" name="max-per-page" min="1" max="50" value="<?php echo $config['max-per-page'] ?>">
                         </p>
                     </div>
                 </div>
             </fieldset>
             <fieldset class="rex-form-col-1">
-                <legend>Veröffentlichen der News bei</legend>
+                <legend><?php echo $I18N->msg('asd_news_settings_published_by'); ?></legend>
                 <div class="rex-form-wrapper">
                     <?php
 
                     foreach(array(
-                        'single' => 'der ausgewählten Sprache',
-                        'all' => 'für alle Sprachen'
+                        'single' => $I18N->msg('asd_news_current_lang'),
+                        'all' => $I18N->msg('asd_news_all_lang')
                     ) as $value => $description) {
 
                         $checked = ($value == $config['published-lang']) ? ' checked="checked"' : '';

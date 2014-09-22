@@ -40,7 +40,9 @@ PHP Methoden
 ```$monthName = $news->getMonthName($lang = '_de');```
 
 * Meta Tags einfügen
-```$news->replaceSeoTags(array(
+```
+$news->replaceSeoTags(array(
   'keywords' => $foo,
   'og:image' => $news->getImage()
-));```
+));
+```

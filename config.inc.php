@@ -11,6 +11,10 @@ $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';
 $REX['EXTPERM'][] = 'asd_news[publish]';
 $REX['EXTPERM'][] = 'asd_news[create]';
 
+if($REX['REDAXO']) {
+    $I18N->appendFile(rex_path::addon('asd_news', 'lang' . DIRECTORY_SEPARATOR));
+}
+
 //set pages
 $REX['ADDON']['asd_news']['SUBPAGES'] = array(
     array('news', 'Neuigkeiten'),
@@ -76,7 +80,11 @@ if($REX['REDAXO']) {
         if($func == 'publish') {
             $id = rex_post('id', 'int');
             $clang = rex_post('clang', 'int');
-            $time = new DateTime(rex_post('time'));
+            try {
+                $time = new DateTime(rex_post('time'));
+            } catch(Exception $e) {
+                $time = new DateTime();
+            }
 
             $sql = new rex_sql();
             $sql->setTable($REX['TABLE_PREFIX'] .'asd_news');
@@ -92,16 +100,17 @@ if($REX['REDAXO']) {
 
             $sql->update();
 
-            echo $time->format('Y-m-d H:i');
+            echo $time->format('Y-m-d H:i') . '
+        <a href="index.php?page=asd_news&subpage=news&clang='.$clang.'&func=unpublish&id='.$id.'">
+            <img src="../'.$REX['MEDIA_ADDON_DIR'].'/asd_news/unpublished.svg"
+            width="20" height="20" style="vertical-align: middle; margin-left: 5px">
+        </a>';
             exit();
         }
     }
 
     rex_register_extension('CLANG_ADDED', 'asd_news_addClang');
     rex_register_extension('CLANG_DELETED', 'asd_news_deleteClang');
-
-
-    $I18N->appendFile(rex_path::addon('asd_news', 'lang'.DIRECTORY_SEPARATOR));
 
     // autoload Plugins
     $plugins = OOPlugin::getAvailablePlugins('asd_news');

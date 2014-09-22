@@ -2,7 +2,7 @@
 
 require rex_path::src('layout'.DIRECTORY_SEPARATOR.'top.php');
 
-rex_title('Neuigkeiten Addon', $REX['ADDON']['asd_news']['SUBPAGES']);
+rex_title($I18N->msg('asd_news'), $REX['ADDON']['asd_news']['SUBPAGES']);
 
 $page = rex_request('page', 'string');
 $subpage = rex_request('subpage', 'string', 'news');
