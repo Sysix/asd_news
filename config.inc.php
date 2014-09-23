@@ -2,7 +2,7 @@
 
 // register addon
 $REX['ADDON']['name']['asd_news'] = 'News';
-$REX['ADDON']['version']['asd_news'] = '1.0.0';
+$REX['ADDON']['version']['asd_news'] = '1.0.1 DEV';
 $REX['ADDON']['author']['asd_news'] = 'ArtStudioDESIGN';
 $REX['ADDON']['supportpage']['asd_news'] = 'http://redaxo.org/forum/';
 $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';
@@ -34,7 +34,7 @@ if($REX['REDAXO'] && is_object($REX['USER'])) {
 }
 
 // set config
-$REX['ADDON']['asd_news']['configFile'] = rex_path::addon('asd_news', 'data/config.json');
+$REX['ADDON']['asd_news']['configFile'] = rex_path::addonData('asd_news', 'config.json');
 $REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON']['asd_news']['configFile']), true);
 
 // Metainfo

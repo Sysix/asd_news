@@ -37,6 +37,11 @@ CREATE TABLE IF NOT EXISTS `' . $REX['TABLE_PREFIX'] . 'asd_news_category` (
   PRIMARY KEY (`id`)
 );');
 
+rex_dir::copy(
+    rex_path::addon('asd_news', 'data'),
+    rex_path::addonData('asd_news')
+);
+
 if($sql->hasError()) {
     $msg = 'MySQL-Error: ' . $sql->getErrno() . '<br />';
     $msg .= $sql->getError();
