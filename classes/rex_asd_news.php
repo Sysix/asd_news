@@ -5,7 +5,9 @@ class rex_asd_news
     public static $SEO_ADDON = null;
     public static $SEO_URL_CONTROL = false;
 
+    /** @var  rex_sql $sql */
     public $sql;
+
 
     public static $month_de = array(
         1 => 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',

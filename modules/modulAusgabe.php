@@ -33,13 +33,21 @@ if ($news_id) {
 
 } else {
 
-    foreach (rex_asd_news::getNewsByCategory('REX_VALUE[1]') as $news) {
+    $newsList = rex_asd_news::getNewsByCategory('REX_VALUE[1]');
+
+    $pager = new rex_asd_pager($REX['ADDON']['asd_news']['config']['max-per-page'], 'page');
+    $pager->setRowCount(count($newsList));
+
+    $newsList = $pager->filterList($newsList);
+
+    foreach ($newsList as  $news) {
     /** @var rex_asd_news $news */
 
         $title = $news->getValue('title');
         $url = $news->getUrl();
         $id = $news->getValue('id');
         $date = $news->getPublishDate();
+
 
         ?>
         <div class="asd-news" id="news-<?php echo $id; ?>">
@@ -51,6 +59,15 @@ if ($news_id) {
 
     }
 
+    if($pager->getPageCount() > 1) {
+        if($pager->getCurrentPage() != $pager->getPrevPage()) {
+            echo '<a class="button asd-pager-left" href="' . rex_getUrl('', '', array($pager->getCursorName() => $pager->getPrevPage())) . '">prev</a>';
+        }
+
+        if($pager->getCurrentPage() != $pager->getNextPage()) {
+            echo '<a class="button asd-pager-right" href="' . rex_getUrl('', '', array($pager->getCursorName() => $pager->getNextPage())) . '">next</a>';
+        }
+    }
 }
 
 ?>
