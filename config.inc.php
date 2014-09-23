@@ -2,7 +2,7 @@
 
 // register addon
 $REX['ADDON']['name']['asd_news'] = 'News';
-$REX['ADDON']['version']['asd_news'] = '0.1 Beta';
+$REX['ADDON']['version']['asd_news'] = '1.0.0';
 $REX['ADDON']['author']['asd_news'] = 'ArtStudioDESIGN';
 $REX['ADDON']['supportpage']['asd_news'] = 'http://redaxo.org/forum/';
 $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';
@@ -41,28 +41,22 @@ $REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON'
 $page = rex_request('page', 'string', '');
 
 // TODO: Metainfo intergration
+/*
 rex_register_extension('PAGE_CHECKED', function ($params) use ($page, $REX, $I18N) {
 
-
     if ($page == 'metainfo') {
-
-        $metanews = new rex_be_page('News', array('page' => $page, 'subpage' => 'asd_news'));
+        $metanews = new rex_be_page($I18N->msg('asd_news_news'), array('page' => $page, 'subpage' => 'asd_news'));
         $metanews->setPath(rex_path::addon('asd_news', 'pages/metainfo.php'));
         $metanews->setHref('index.php?page=' . $page . '&subpage=asd_news');
 
-        $mainPage = $params['pages'][$page]->getPage();
-        $mainPage->addSubPage($metanews);
+        $metainfo = $params['pages'][$page]->getPage()->getSubPages();
+
+        $metainfo[0]->addSubPage($metanews);
 
     }
-    /*
-
-        $REX['ADDON']['prefixes'][$page][]  = 'asd_';
-        $REX['ADDON']['metaTables'][$page]['asd_'] = $REX['TABLE_PREFIX'] . 'asd_news';
-        $REX['ADDON']['pages'][$page][] = array('asd_news', 'News');
-
-    */
 
 });
+*/
 
 require_once rex_path::addon('asd_news', 'functions/rex_asd_news_language.php');
 require_once rex_path::addon('asd_news', 'functions/asd_news_jquery.php');
@@ -99,6 +93,7 @@ if ($REX['REDAXO']) {
     if ($page == 'asd_news') {
         rex_register_extension('PAGE_HEADER', 'asd_news_setjQueryTags');
 
+        // Ajax Publish
         if ($func == 'publish') {
             $id = rex_post('id', 'int');
             $clang = rex_post('clang', 'int');
@@ -131,6 +126,7 @@ if ($REX['REDAXO']) {
         }
     }
 
+    // add / remove News if lang added or removed
     rex_register_extension('CLANG_ADDED', 'asd_news_addClang');
     rex_register_extension('CLANG_DELETED', 'asd_news_deleteClang');
 
