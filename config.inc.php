@@ -8,19 +8,30 @@ $REX['ADDON']['supportpage']['asd_news'] = 'http://redaxo.org/forum/';
 $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';
 
 // set permission
-$REX['EXTPERM'][] = 'asd_news[publish]';
-$REX['EXTPERM'][] = 'asd_news[create]';
+$REX['PERM'][] = 'asd_news[]';
+$REX['EXTPERM'][] = 'asd_news[settings]';
+$REX['EXTPERM'][] = 'asd_news[faq]';
 
+/** @var i18n $I18N */
 if ($REX['REDAXO']) {
     $I18N->appendFile(rex_path::addon('asd_news', 'lang' . DIRECTORY_SEPARATOR));
 }
 
-//set pages
-$REX['ADDON']['asd_news']['SUBPAGES'] = array(
-    array('news', 'Neuigkeiten'),
-    array('rubric', 'Rubriken'),
-    array('settings', 'Einstellungen')
-);
+if($REX['REDAXO'] && is_object($REX['USER'])) {
+    //set pages
+    $REX['ADDON']['asd_news']['SUBPAGES'] = array(
+        array('news', $I18N->msg('asd_news_news')),
+        array('rubric', $I18N->msg('asd_news_rubric')),
+    );
+
+    if ($REX['USER']->hasPerm('asd_news[settings]') || $REX['USER']->isAdmin()) {
+        $REX['ADDON']['asd_news']['SUBPAGES'][] = array('settings', $I18N->msg('asd_news_settings'));
+    }
+
+    if ($REX['USER']->hasPerm('asd_news[faq]') || $REX['USER']->isAdmin()) {
+        $REX['ADDON']['asd_news']['SUBPAGES'][] = array('faq', $I18N->msg('asd_news_faq'));
+    }
+}
 
 // set config
 $REX['ADDON']['asd_news']['configFile'] = rex_path::addon('asd_news', 'data/config.json');
@@ -28,6 +39,8 @@ $REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON'
 
 // Metainfo
 $page = rex_request('page', 'string', '');
+
+// TODO: Metainfo intergration
 rex_register_extension('PAGE_CHECKED', function ($params) use ($page, $REX, $I18N) {
 
 
@@ -133,6 +146,7 @@ if ($REX['REDAXO']) {
 
 } else {
 
+    // Frontend CSS Einbindung falls aktiv
     if ($REX['ADDON']['asd_news']['config']['include-css'] == "true") {
 
         rex_register_extension('OUTPUT_FILTER', function ($params) use ($REX) {

@@ -2,10 +2,12 @@
 
 $REX['ADDON']['install']['asd_news'] = 1;
 
+/*
 if(!OOAddon::isAvailable('metainfo')) {
     $REX['ADDON']['install']['asd_news'] = 0;
     $REX['ADDON']['installmsg']['asd_news'] = 'Bitte installieren & aktivieren Sie das Addon "metainfo"';
 }
+*/
 
 $sql = rex_sql::factory();
 $sql->setQuery('

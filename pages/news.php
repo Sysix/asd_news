@@ -107,7 +107,8 @@ if ($func == '') {
         $value .= '
         <a href="' . $list->getParsedUrl(array('func' => 'unpublish', 'id' => '###id###')) . '">
             <img src="../' . $REX['MEDIA_ADDON_DIR'] . '/asd_news/unpublished.svg"
-            width="20" height="20" style="vertical-align: middle; margin-left: 5px">
+            width="20" height="20" style="vertical-align: middle; margin-left: 5px"
+            onclick="return confirm(\''.$I18N->msg('asd_news_really_unpublish').'\');">
         </a>';
 
         if ($publishedAt->getTimestamp() == -62169987600) {

@@ -4,6 +4,7 @@ $news_id = rex_asd_news::getNewsId();
 
 if ($news_id) {
 
+    /** @var rex_asd_news $news */
     $news = rex_asd_news::getNewsById($news_id);
 
     $url = $news->getUrl();
@@ -25,6 +26,7 @@ if ($news_id) {
         <img src="<?php echo $news->getImage() ?>" alt="" class="news-picture">
         <span class="asd-news-date"><?php echo $date->format('d. ').$news->getMonthName().$date->format(' Y H:i'); ?></span>
         <?php echo $text; ?>
+        <a class="button" href="<?php echo rex_getUrl('', '') ?>">zurück</a>
     </div>
     <?php
 

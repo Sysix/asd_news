@@ -5,6 +5,7 @@ asd_news_deleted = News erfolgreich gelöscht
 asd_news_title = Titel
 asd_news_publishedAt = Veröffentlicht am
 asd_news_publish = Veröffentlichen
+asd_news_really_unpublish = News wirklich unveröffentlichen?
 asd_news_really_delete = News wirklich löschen?
 asd_news_picture = Vorschaubild
 asd_news_text = Inhalt
@@ -22,3 +23,8 @@ asd_news_current_lang = ausgewählte Sprache
 asd_news_all_lang = alle Sprachen
 asd_news_include_css = ASD News .CSS Datei einbinden
 asd_news_install_modul = ASD News Modul installieren
+asd_news_no_access = Sie haben nicht die erforderlichen Rechte für diesen Bereich
+asd_news_modul_added = ASD News Modul wurde hinzugefügt
+asd_news_faq = F.A.Q
+asd_news_faq_question_1 = Funktioniert das Addon mit dem <code>url_control</code> Plugin?
+asd_news_faq_answer_1 = Ja es funktioniert, es müssen nur folgende Einstellungen gemacht werden:<br /><img src="../{0}/asd_news/help_url_control_settings.png" style="max-width: 100%;">
