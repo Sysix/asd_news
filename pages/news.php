@@ -111,7 +111,7 @@ if ($func == '') {
             onclick="return confirm(\''.$I18N->msg('asd_news_really_unpublish').'\');">
         </a>';
 
-        if ($publishedAt->getTimestamp() == -62169987600) {
+        if ($publishedAt->getTimestamp() == -62169987600 || $publishedAt->getTimestamp() === false) {
             $value = '<input type="button" class="submit datepicker" value="' . $I18N->msg('asd_news_publish') . '" data-id="###id###" data-clang="' . $clang . '" data-date="' . $now->format('d/m/Y H:i') . '">';
         }
 
@@ -180,6 +180,12 @@ if ($func == '') {
 
 
 if ($func == 'add' || $func == 'edit') {
+
+    if(rex_asd_news::$SEO_URL_CONTROL) {
+        foreach(array('REX_FORM_SAVED', 'REX_FORM_DELETED') as $extension) {
+            rex_register_extension($extension, 'url_generate::generatePathFile');
+        }
+    }
 
     $title = ($func == 'add') ? $I18N->msg('add') : $I18N->msg('edit');
 

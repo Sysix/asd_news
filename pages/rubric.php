@@ -44,12 +44,17 @@ if($func == '') {
 }
 
 if($func == 'add' || $func == 'edit') {
+
     $title = ($func == 'add') ? $I18N->msg('add') : $I18N->msg('edit');
 
     $form = new rex_form($REX['TABLE_PREFIX'] . 'asd_news_category', ucfirst($title), 'id='.$id);
 
     $field = $form->addTextField('name');
     $field->setLabel($I18N->msg('name'));
+
+    if($func == 'edit') {
+        $form->addParam('id', $id);
+    }
 
     $form->show();
 
