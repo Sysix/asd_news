@@ -173,6 +173,16 @@ class rex_asd_news
     }
 
     /**
+     * is the news online?
+     *
+     * @return bool
+     */
+    public function isOnline()
+    {
+        return ($this->getValue('online') == 1);
+    }
+
+    /**
      * set the SEO Params (keywords, description, ...)
      * at the moment use self::replaceSeoTags()
      *
@@ -372,7 +382,7 @@ class rex_asd_news
         WHERE ' . $where . '
           AND `clang` = ' . (int)$clang . '
           AND `publishedAt` BETWEEN "0000-00-00 00:01:00" AND "' . date('Y-m-d H:i:s') . '"
-        ORDER BY `publishedAt`');
+        ORDER BY `publishedAt` DESC');
 
         for ($i = 1; $i <= $sql->getRows(); $i++) {
 
