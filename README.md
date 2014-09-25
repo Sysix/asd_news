@@ -5,11 +5,22 @@ Features
 --------
 
 * Kompatibel mit SEO AddOns "seo42", "yrewrite", "rexseo"
-* Kampatibel mit Plugin "url_control"
+* Kompatibel mit Plugin "url_control"
 * Mehrsprachigkeit
 * Erweiterung von Meta-Tags möglich (siehe `rex_asd_news::replaceSeoTags()`)
 * SEO42 Image Manager Urls möglich
 * On/Off Schaltung von News
+
+Update 1.1.0
+------------
+* Methode `$news->isOnline()` hinzugefügt
+* Neuste News zuerst
+* Config in Data Ordner für Updatefähigkeit
+* Veröffentlichen Bugfix unter Windows
+* Rubrik Editieren Bugfix
+* url_generate::generatePathFile beim hinzfügen/editieren einer News
+* Where Condition flexibler gestaltet
+* Erfolgsmeldung beim speichern der Einstellungen
 
 
 PHP Methoden

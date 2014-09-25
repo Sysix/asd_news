@@ -208,8 +208,6 @@ class rex_asd_news
     public function replaceSeoTags(array $tagNames)
     {
         $self = $this;
-        error_reporting(E_ALL);
-        ini_set('display_errors', 1);
 
         $tagNames = rex_register_extension_point('ASD_NEWS_SEOTAGS', $tagNames);
 
@@ -306,7 +304,9 @@ class rex_asd_news
      */
     public static function getNewsByCategory($cat, $clang = null)
     {
-        return self::getByWhere('`category` = ' . (int)$cat, $clang);
+        return self::getByWhere(array(
+            'category' => '= ' . (int)$cat
+        ), $clang);
     }
 
     /**
@@ -318,7 +318,9 @@ class rex_asd_news
      */
     public static function getNewsByIds($newsIds, $clang = null)
     {
-        return self::getByWhere('`id` IN (' . implode(',', (array)$newsIds) . ')', $clang);
+        return self::getByWhere(array(
+            'id' => 'IN (' . implode(',', (array)$newsIds) . ')'
+        ), $clang);
     }
 
     /**
@@ -330,7 +332,9 @@ class rex_asd_news
      */
     public static function getNewsById($newsId, $clang = null)
     {
-        $news = self::getByWhere('`id` = ' . (int)$newsId, $clang);
+        $news = self::getByWhere(array(
+            'id' => '= ' . (int)$newsId
+        ), $clang);
 
         return $news[0];
     }
@@ -340,22 +344,29 @@ class rex_asd_news
      */
     public static function getAllNews($clang = null)
     {
-        return self::getByWhere('1 = 1', $clang);
+        return self::getByWhere(array(
+            '1' => '= 1'
+        ), $clang);
     }
 
     /**
      * @param DateTime $date
      * @param null|DateTime $date2
+     * @param int|null $clang
      * @return array
      */
-    public static function getNewsByPublishDate(DateTime $date, $date2 = null)
+    public static function getNewsByPublishDate(DateTime $date, $date2 = null, $clang = null)
     {
         if ($date2 == null) {
-            return self::getByWhere('`publishedAt` <= ' . $date->format('Y-m-d H:i:s'));
+            return self::getByWhere(array(
+                'publishedAt' => '<= "' . $date->format('Y-m-d H:i:s') . '"'
+            ), $clang);
         }
 
-        return self::getByWhere('`publishedAt` BETWEEN "' . $date->format('Y-m-d H:i:s') . '"
-                                                   AND "' . $date2->format('Y-m-d H:i:s') . '"');
+        return self::getByWhere(array(
+            'publishedAt' => 'BETWEEN "' . $date->format('Y-m-d H:i:s') . '"
+                                  AND "' . $date2->format('Y-m-d H:i:s') . '"'
+        ), $clang);
     }
 
     /**
@@ -373,15 +384,17 @@ class rex_asd_news
             $clang = $REX['CUR_CLANG'];
         }
 
+        $where = array_merge(self::getDefaultWhere($clang), $where);
+
+        $where = self::generateWhere($where);
+
         $news = array();
 
         $sql = new rex_sql();
         $sql->setQuery('
         SELECT *
         FROM `' . $REX['TABLE_PREFIX'] . 'asd_news`
-        WHERE ' . $where . '
-          AND `clang` = ' . (int)$clang . '
-          AND `publishedAt` BETWEEN "0000-00-00 00:01:00" AND "' . date('Y-m-d H:i:s') . '"
+        ' . $where . '
         ORDER BY `publishedAt` DESC');
 
         for ($i = 1; $i <= $sql->getRows(); $i++) {
@@ -392,6 +405,32 @@ class rex_asd_news
         }
 
         return $news;
+    }
+
+    /**
+     * @param int $clang
+     * @return array
+     */
+    private function getDefaultWhere($clang)
+    {
+        return array(
+            'clang' => '= ' . $clang,
+            'publishedAt' => 'BETWEEN "0000-00-00 00:01:00" AND "' . date('Y-m-d H:i:s') . '"'
+        );
+    }
+
+    /**
+     * @param array $whereArray
+     * @return string
+     */
+    private function generateWhere(array $whereArray)
+    {
+        $where = array();
+        foreach ($whereArray as $name => $condition) {
+            $where[] = '`' . $name . '` ' . $condition;
+        }
+
+        return 'WHERE ' . implode(' AND ' . PHP_EOL, $where);
     }
 
     /**

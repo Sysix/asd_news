@@ -46,7 +46,11 @@ if ($func == 'update') {
 
         $config = array_merge($config, $saves);
 
-        file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($saves));
+        if(file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($saves))) {
+            echo rex_info($I18N->msg('asd_news_settings_saved'));
+        } else {
+            echo rex_warning($I18N->msg('asd_news_settings_not_saved'));
+        }
 
     }
 
@@ -69,10 +73,9 @@ if ($func == 'update') {
             echo rex_warning($modul->getError());
         }
 
-        $func = '';
-
-
     }
+
+    $func = '';
 
 }
 
