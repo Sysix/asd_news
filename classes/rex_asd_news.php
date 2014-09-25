@@ -411,7 +411,7 @@ class rex_asd_news
      * @param int $clang
      * @return array
      */
-    private function getDefaultWhere($clang)
+    private static function getDefaultWhere($clang)
     {
         return array(
             'clang' => '= ' . $clang,
@@ -423,7 +423,7 @@ class rex_asd_news
      * @param array $whereArray
      * @return string
      */
-    private function generateWhere(array $whereArray)
+    private static function generateWhere(array $whereArray)
     {
         $where = array();
         foreach ($whereArray as $name => $condition) {
