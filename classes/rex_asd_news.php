@@ -374,6 +374,7 @@ class rex_asd_news
     }
 
     /**
+     * @param int|null $clang
      * @return array
      */
     public static function getAllNews($clang = null)
@@ -381,6 +382,10 @@ class rex_asd_news
         return self::getByWhere(array(), $clang);
     }
 
+    /**
+     * @param int|null $clang
+     * @return array
+     */
     public static function getArchiveNews($clang = null)
     {
         global $REX;

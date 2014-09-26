@@ -10,6 +10,23 @@ Features
 * Erweiterung von Meta-Tags möglich (siehe `rex_asd_news::replaceSeoTags()`)
 * SEO42 Image Manager Urls möglich
 * On/Off Schaltung von News
+* News ab einer bestimmten Anzahl zu archivieren
+* fertige Module via Knopfdruck installieren
+
+Update 1.2.0
+------------
+* Unter Einstellungen => ab welcher Newsanzahl die News in das Archiv landen
+* Modul "ASD News - Archiv" hinzugefügt
+* Modul "ASD News - Alle News" hinzugefügt
+* Extension _ASD_NEWS_GENERATE_URL_ hinzugefügt (`$news->getUrl()`)
+* Methode `$news->getRubricName()` hinzugefügt
+* `rex_asd_news::getAllNews($clang = null)` - Ausgabe aller News
+* `rex_asd_news::getArchiveNews()` - Ausgabe des Archivs
+* `$news->getUrl($params = array())` - `$params` kann nun `clang` & `article-id` beinhalten
+* `$pager->setArchive($archive = false)` - Newsanzahl für Archiv berücksichtigen
+* `$pager->getButtons()` Ausgabe der next/prev Buttons
+* Bugfix "call unstatic method`getDefaultWhere` & `generateWhere` static"
+
 
 Update 1.1.0
 ------------
@@ -32,6 +49,12 @@ PHP Methoden
 * Mehrere News
 ```$news = rex_asd_news::getNewsByIds(array(1, 2, 3, 4));```
 
+* Alle News
+```$news = rex_asd_news::getAllNews();```
+
+* Archivierte News 
+```$news = rex_asd_news::getArchiveNews();```
+
 * Mehrere News von einer Kategorie
 ```$news = rex_asd_news::getNewsByCategory((int)$catId);```
 
@@ -44,8 +67,14 @@ PHP Methoden
 * URL bekommen
 ```$url = $news->getUrl($params = array());```
 
-* PublishDate bekommen als DateTime Objekt*
+* Rubriknamen bekommen
+```$url = $news->getRubricName();```
+
+* PublishDate bekommen als DateTime Objekt
 ```$date = $news->getPublishDate();```
+
+* Überprüfen ob News online
+```if($news->isOnline())```
 
 * Monatname bekommen
 ```$monthName = $news->getMonthName($lang = '_de');```

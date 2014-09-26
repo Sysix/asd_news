@@ -2,7 +2,7 @@
 
 // register addon
 $REX['ADDON']['name']['asd_news'] = 'News';
-$REX['ADDON']['version']['asd_news'] = '1.1.1 DEV';
+$REX['ADDON']['version']['asd_news'] = '1.2';
 $REX['ADDON']['author']['asd_news'] = 'ArtStudioDESIGN';
 $REX['ADDON']['supportpage']['asd_news'] = 'http://redaxo.org/forum/';
 $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';

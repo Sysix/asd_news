@@ -108,7 +108,7 @@ if ($func == '') {
         <a href="' . $list->getParsedUrl(array('func' => 'unpublish', 'id' => '###id###')) . '">
             <img src="../' . $REX['MEDIA_ADDON_DIR'] . '/asd_news/unpublished.svg"
             width="20" height="20" style="vertical-align: middle; margin-left: 5px"
-            onclick="return confirm(\''.$I18N->msg('asd_news_really_unpublish').'\');">
+            onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">
         </a>';
 
         if ($publishedAt->getTimestamp() == -62169987600 || $publishedAt->getTimestamp() === false) {
@@ -181,8 +181,8 @@ if ($func == '') {
 
 if ($func == 'add' || $func == 'edit') {
 
-    if(rex_asd_news::$SEO_URL_CONTROL) {
-        foreach(array('REX_FORM_SAVED', 'REX_FORM_DELETED') as $extension) {
+    if (rex_asd_news::$SEO_URL_CONTROL) {
+        foreach (array('REX_FORM_SAVED', 'REX_FORM_DELETED') as $extension) {
             rex_register_extension($extension, 'url_generate::generatePathFile');
         }
     }
