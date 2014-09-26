@@ -175,10 +175,35 @@ class rex_asd_news
             return url_generate::getUrlById($REX['TABLE_PREFIX'] . 'asd_news', $this->getValue('id'));
         }
 
-        $art_id = $params['art-id'];
+        $art_id = $params['article-id'];
         $clang = $params['clang'];
 
+        unset($params['article-id'], $params['clang']);
+
         return rex_getUrl($art_id, $clang, $params);
+    }
+
+    /**
+     * return string
+     */
+    public function getRubricName() {
+        static $rubrics = array();
+
+        if(empty($rubrics)) {
+            global $REX;
+
+            $sql = new rex_sql();
+            $sql->setQuery('SELECT * FROM `' . $REX['TABLE_PREFIX'] . 'asd_news_category`');
+            for($i = 1; $i <= $sql->getRows(); $i++) {
+                $rubrics[$sql->getValue('id')] = $sql->getValue('name');
+
+                $sql->next();
+            }
+
+        }
+
+        return $rubrics[$this->getValue('category')];
+
     }
 
     /**
