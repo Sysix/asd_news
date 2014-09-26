@@ -28,20 +28,20 @@ if ($news_id) {
         <?php echo $text; ?>
         <a class="button" href="<?php echo rex_getUrl('', '') ?>">zurück</a>
     </div>
-    <?php
+<?php
 
 
 } else {
 
-    $newsList = rex_asd_news::getNewsByCategory('REX_VALUE[1]');
+    $newsList = rex_asd_news::getAllNews();
 
     $pager = new rex_asd_pager($REX['ADDON']['asd_news']['config']['max-per-page'], 'page');
     $pager->setRowCount(count($newsList));
 
     $newsList = $pager->filterList($newsList);
 
-    foreach ($newsList as  $news) {
-    /** @var rex_asd_news $news */
+    foreach ($newsList as $news) {
+        /** @var rex_asd_news $news */
 
         $title = $news->getValue('title');
         $url = $news->getUrl();
@@ -55,19 +55,10 @@ if ($news_id) {
             <?php echo $date->format('d.m.Y H:i'); ?>
             <a href="<?php echo $url; ?>">Artikel ansehen</a>
         </div>
-        <?php
+    <?php
 
     }
-
-    if($pager->getPageCount() > 1) {
-        if($pager->getCurrentPage() != $pager->getPrevPage()) {
-            echo '<a class="button asd-pager-left" href="' . rex_getUrl('', '', array($pager->getCursorName() => $pager->getPrevPage())) . '">prev</a>';
-        }
-
-        if($pager->getCurrentPage() != $pager->getNextPage()) {
-            echo '<a class="button asd-pager-right" href="' . rex_getUrl('', '', array($pager->getCursorName() => $pager->getNextPage())) . '">next</a>';
-        }
-    }
+    echo $pager->getButtons();
 }
 
 ?>

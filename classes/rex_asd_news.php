@@ -163,13 +163,22 @@ class rex_asd_news
     {
         global $REX;
 
-        $params = array_merge(array('news-id' => $this->getValue('id')), $params);
+        $params = array_merge(array(
+            'news-id' => $this->getValue('id'),
+            'clang' => $REX['CUR_CLANG'],
+            'article-id' => $REX['ARTICLE_ID']
+        ), $params);
+
+        $params = rex_register_extension_point('ASD_NEWS_GENERATE_URL', $params);
 
         if (self::$SEO_URL_CONTROL) {
             return url_generate::getUrlById($REX['TABLE_PREFIX'] . 'asd_news', $this->getValue('id'));
         }
 
-        return rex_getUrl($REX['ARTICLE_ID'], $REX['CUR_CLANG'], $params);
+        $art_id = $params['art-id'];
+        $clang = $params['clang'];
+
+        return rex_getUrl($art_id, $clang, $params);
     }
 
     /**
@@ -328,7 +337,7 @@ class rex_asd_news
      *
      * @param int $newsId
      * @param int|null $clang
-     * @return array
+     * @return self
      */
     public static function getNewsById($newsId, $clang = null)
     {
@@ -344,8 +353,16 @@ class rex_asd_news
      */
     public static function getAllNews($clang = null)
     {
+        return self::getByWhere(array(), $clang);
+    }
+
+    public static function getArchiveNews($clang = null)
+    {
+        global $REX;
+
         return self::getByWhere(array(
-            '1' => '= 1'
+            'LIMIT' => 99999,
+            'OFFSET' => $REX['ADDON']['asd_news']['config']['min-archive']
         ), $clang);
     }
 
@@ -372,11 +389,11 @@ class rex_asd_news
     /**
      * return an array of news filtered by a Where
      *
-     * @param string $where
+     * @param array $where
      * @param int|null $clang
      * @return array
      */
-    private static function getByWhere($where, $clang = null)
+    private static function getByWhere(array $where, $clang = null)
     {
         global $REX;
 
@@ -386,7 +403,11 @@ class rex_asd_news
 
         $where = array_merge(self::getDefaultWhere($clang), $where);
 
-        $where = self::generateWhere($where);
+        $offset = self::getWhereSpecials('OFFSET', $where);
+        $limit = self::getWhereSpecials('LIMIT', $where);
+
+        if (isset($where))
+            $where = self::generateWhere($where);
 
         $news = array();
 
@@ -395,7 +416,7 @@ class rex_asd_news
         SELECT *
         FROM `' . $REX['TABLE_PREFIX'] . 'asd_news`
         ' . $where . '
-        ORDER BY `publishedAt` DESC');
+        ORDER BY `publishedAt` DESC' . $limit . $offset);
 
         for ($i = 1; $i <= $sql->getRows(); $i++) {
 
@@ -431,6 +452,22 @@ class rex_asd_news
         }
 
         return 'WHERE ' . implode(' AND ' . PHP_EOL, $where);
+    }
+
+    /**
+     * @param string $type
+     * @param array $where
+     * @return string
+     */
+    private static function getWhereSpecials($type, array &$where)
+    {
+        $return = '';
+        if (isset($where[$type])) {
+            $return = ' ' . $type . ' ' . $where[$type];
+            unset($where[$type]);
+        }
+
+        return $return;
     }
 
     /**
