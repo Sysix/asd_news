@@ -5,6 +5,7 @@ asd_news_deleted = news successfully deleted
 asd_news_title = title
 asd_news_publishedAt = published on
 asd_news_publish = publish
+asd_news_unpublish = unpublish
 asd_news_really_unpublish = really unpublish the news?
 asd_news_really_delete = really delete the news?
 asd_news_picture = thumbnail

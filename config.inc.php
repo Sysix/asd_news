@@ -17,7 +17,7 @@ if ($REX['REDAXO']) {
     $I18N->appendFile(rex_path::addon('asd_news', 'lang' . DIRECTORY_SEPARATOR));
 }
 
-if($REX['REDAXO'] && is_object($REX['USER'])) {
+if ($REX['REDAXO'] && is_object($REX['USER'])) {
     //set pages
     $REX['ADDON']['asd_news']['SUBPAGES'] = array(
         array('news', $I18N->msg('asd_news_news')),
@@ -87,7 +87,7 @@ rex_register_extension('REXSEO_SITEMAP_ARRAY_CREATED', function($params) {
 */
 
 
-if ($REX['REDAXO']) {
+if ($REX['REDAXO'] && is_object($REX['USER'])) {
 
     $page = rex_request('page');
     $func = rex_request('func');
@@ -119,11 +119,22 @@ if ($REX['REDAXO']) {
 
             $sql->update();
 
-            echo $time->format('Y-m-d H:i') . '
-        <a href="index.php?page=asd_news&subpage=news&clang=' . $clang . '&func=unpublish&id=' . $id . '">
-            <img src="../' . $REX['MEDIA_ADDON_DIR'] . '/asd_news/unpublished.svg"
-            width="20" height="20" style="vertical-align: middle; margin-left: 5px">
-        </a>';
+            $urlBase = 'index.php?list=232cc606fc1a5fb5cf5badfc8e360ae0&amp;page=asd_news&amp;subpage=news&amp;clang=' . $clang . '&amp;func=';
+
+
+            $sql->setQuery('SELECT * FROM `'.$REX['TABLE_PREFIX'] . 'asd_news` WHERE `id` = ' . $id . ' AND `clang` = ' . $clang);
+
+            echo '
+        <td>' . $id . '</td>
+        <td>' . $sql->getValue('title') . '</td>
+        <td><span>' . $time->format('Y-m-d H:i') . '</span></td>
+        <td><a href="' . $urlBase . 'unpublish&amp;id=' . $id . '" class="rex-offline" onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">' . $I18N->msg('asd_news_unpublish') . '</a></td>
+        <td><a href="' . $urlBase . 'edit&amp;id=' . $id . '">' . $I18N->msg('edit') . '</a></td>
+        <td><a href="' . $urlBase . 'delete&amp;id=' . $id . '" onclick="return confirm(\'' . $I18N->msg('asd_news_really_delete') . '\');">' . $I18N->msg('delete') . '</a></td>
+        <td><a href="' . $urlBase . 'status&amp;id=' . $id . '" class="rex-online">' . $I18N->msg('status_online') . '</a></td>
+
+            ';
+
             exit();
         }
     }

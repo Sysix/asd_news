@@ -80,7 +80,11 @@ if ($func == '') {
       `id`, `title`, `publishedAt`, `status`
     FROM `' . $REX['TABLE_PREFIX'] . 'asd_news`
     WHERE `clang` = ' . $clang . '
-    ORDER BY `publishedAt`');
+    ORDER BY CASE
+        WHEN `publishedAt` = "0000-00-00 00:00:00" THEN 1
+         ELSE 0
+        END DESC,
+    `publishedAt` DESC');
 
     $list->addParam('clang', $clang);
     $list->addParam('subpage', $subpage);
@@ -94,7 +98,7 @@ if ($func == '') {
     $list->setColumnLabel('title', $I18N->msg('asd_news_title'));
     $list->setColumnLabel('publishedAt', $I18N->msg('asd_news_publishedAt'));
     $list->removeColumn('status');
-    $list->addTableColumnGroup(array(40, '*', 140, 50, 50, 50));
+    $list->addTableColumnGroup(array(40, '*', 120, 50, 50, 50, 50));
 
     $list->setColumnSortable('publishedAt', $sort);
     $list->setColumnSortable('title', $sort);
@@ -104,21 +108,30 @@ if ($func == '') {
 
         $value = $publishedAt->format('d.m.Y H:i');
 
-        $value .= '
-        <a href="' . $list->getParsedUrl(array('func' => 'unpublish', 'id' => '###id###')) . '">
-            <img src="../' . $REX['MEDIA_ADDON_DIR'] . '/asd_news/unpublished.svg"
-            width="20" height="20" style="vertical-align: middle; margin-left: 5px"
-            onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">
-        </a>';
-
         if ($publishedAt->getTimestamp() == -62169987600 || $publishedAt->getTimestamp() === false) {
-            $value = '<input type="button" class="submit datepicker" value="' . $I18N->msg('asd_news_publish') . '" data-id="###id###" data-clang="' . $clang . '" data-date="' . $now->format('d/m/Y H:i') . '">';
+            return '';
         }
 
         return '<span>' . $value . '</span>';
     });
 
-    $list->addColumn('editCol', $I18N->msg('edit'), -1, array('<th colspan="3">' . $I18N->msg('actions') . '</th>', '<td>###VALUE###</td>'));
+    $list->addColumn('publishCol', $I18N->msg('asd_news_publish'), -1, array('<th colspan="4">' . $I18N->msg('actions') . '</th>', '<td>###VALUE###</td>'));
+    $list->setColumnFormat('publishCol', 'custom', function ($params) use ($list, $clang, $now, $I18N) {
+        $publishedAt = new DateTime($list->getValue('publishedAt'));
+
+        if ($publishedAt->getTimestamp() == -62169987600 || $publishedAt->getTimestamp() === false) {
+            return '
+            <span class="rex-online datepicker" data-id="###id###">' . $I18N->msg('asd_news_publish') . '</span>
+            <span style="height:1px; width:1px; display:block" id="news_###id###" data-clang="' . $clang . '" value="' . $now->format('d/m/Y H:i') . '"></span>';
+        }
+
+        $url = $list->getParsedUrl(array('func' => 'unpublish', 'id' => '###id###'));
+
+        return '<a href="' . $url . '" class="rex-offline" onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">' . $I18N->msg('asd_news_unpublish') . '</a>';
+
+    });
+
+    $list->addColumn('editCol', $I18N->msg('edit'), -1, array('', '<td>###VALUE###</td>'));
     $list->setColumnParams('editCol', array('func' => 'edit', 'id' => '###id###'));
 
     $list->addColumn('delCol', $I18N->msg('delete'), -1, array('', '<td>###VALUE###</td>'));
@@ -138,36 +151,37 @@ if ($func == '') {
 
     });
 
-    /* Bugfix Datetimepicker */
-    $now = $now->sub(new DateInterval(('P1M')));
-
     $list->show();
     echo '
     <script>
     jQuery(document).ready(function($) {
 
-        $(".datepicker").each(function() {
+        $(".datepicker").click(function() {
+            id = $(this).data("id");
+            obj = $("#news_" + id);
+            clang = obj.data("clang");
+            date = obj.data("date");
 
-            text = $(this).val();
 
-            $(this).datetimepicker({
-                minDateTime: new Date(' . $now->format('Y, m, d, H, i') . '),
-                onClose: function(dateText, inst) {
+            obj.datetimepicker({
+                minDate: 0,
+                formatDate: "d.m.Y",
+                dayOfWeekStart: 1,
+                lang: "de",
+                onClose: function() {
                   $.post("index.php", {
                     page: "asd_news",
                     func: "publish",
-                    id: inst.input.data("id"),
-                    clang: inst.input.data("clang"),
-                    time: dateText
+                    id: id,
+                    clang: clang,
+                    time: obj.val()
                   }, function(data) {
-                     inst.input.parent().html(data);
+                     obj.closest("tr").html(data);
                   });
-                  $(this).val(text);
-                },
-                onFocus: function() {
-                  $(this).val($(this).data("date"))
                 }
-            });
+            }).datetimepicker("show");
+
+
 
 
         });
@@ -205,7 +219,7 @@ if ($func == 'add' || $func == 'edit') {
     $field->setLabel($I18N->msg('asd_news_picture'));
 
     $field = $form->addField('textarea', 'text', null, array(
-       'internal::fieldClass' => 'rex_form_element_asd_news_textarea'
+        'internal::fieldClass' => 'rex_form_element_asd_news_textarea'
     ));
     $field->setLabel($I18N->msg('asd_news_text'));
 
