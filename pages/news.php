@@ -204,9 +204,11 @@ if ($func == 'add' || $func == 'edit') {
     $field = $form->addMediaField('picture');
     $field->setLabel($I18N->msg('asd_news_picture'));
 
-    $field = $form->addTextAreaField('text');
+    $field = $form->addField('textarea', 'text', null, array(
+       'internal::fieldClass' => 'rex_form_element_asd_news_textarea'
+    ));
     $field->setLabel($I18N->msg('asd_news_text'));
-    $field->setAttribute('class', 'tinyMCEEditor');
+
 
     $form->addHiddenField('clang', (int)$clang);
     $form->addHiddenField('updatedAt', $now->format('Y-m-d H:i:s'));

@@ -65,6 +65,8 @@ require_once rex_path::addon('asd_news', 'classes/rex_asd_news.php');
 require_once rex_path::addon('asd_news', 'classes/rex_asd_news_utils.php');
 require_once rex_path::addon('asd_news', 'classes/rex_asd_pager.php');
 
+require_once rex_path::addon('asd_news', 'classes/rex_form_element_asd_news_textarea.php');
+
 // Seo Addon setzen
 foreach (array('rexseo', 'yrewrite', 'seo42') as $seoAddon) {
     if (OOAddon::isAvailable($seoAddon)) {
