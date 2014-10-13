@@ -1,6 +1,6 @@
 {
     "max-per-page": 5,
-    "published-lang": "all",
+    "published-lang": "single",
     "pagination": "pager",
     "min-archive": 15,
     "pagination-css-id": "asd-pagination",

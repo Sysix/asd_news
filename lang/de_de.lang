@@ -38,3 +38,5 @@ asd_news_prev_next_buttons = Vor/Zurück Buttons
 asd_news_faq = F.A.Q
 asd_news_faq_question_1 = Funktioniert das Addon mit dem <code>url_control</code> Plugin?
 asd_news_faq_answer_1 = Ja es funktioniert, es müssen nur folgende Einstellungen gemacht werden:<br /><img src="../{0}/asd_news/help_url_control_settings.png" style="max-width: 100%;">
+
+submit = abschicken

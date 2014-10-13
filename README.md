@@ -13,6 +13,18 @@ Features
 * News ab einer bestimmten Anzahl zu archivieren
 * fertige Module via Knopfdruck installieren
 
+Update 1.3.0
+------------
+* CKEditor Support
+* Admin's müssen jetzt die benötigten Rechte besitzen
+* anderen jQuery Datetimepicker thx@RexDude & thx@xdan
+* Pagination-Auswahl zwischen Seitenanzahl & Vor/Zurück-Buttons
+* Pagination/Pager CSS-ID über Einstellungen verwaltbar
+* Backend Struktur geändert
+* Securityfix
+* Bugfix: offline News veröffentlichen
+* Bugfix: Aktiv Style bei Navigation
+
 Update 1.2.0
 ------------
 * Unter Einstellungen => ab welcher Newsanzahl die News in das Archiv landen
