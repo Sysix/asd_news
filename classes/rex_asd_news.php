@@ -379,7 +379,11 @@ class rex_asd_news
      */
     public static function getAllNews($clang = null)
     {
-        return self::getByWhere(array(), $clang);
+        global $REX;
+
+        return self::getByWhere(array(
+            'LIMIT' => $REX['ADDON']['asd_news']['config']['min-archive']
+        ), $clang);
     }
 
     /**
@@ -449,7 +453,6 @@ class rex_asd_news
         ORDER BY `publishedAt` DESC' . $limit . $offset);
 
         for ($i = 1; $i <= $sql->getRows(); $i++) {
-
             $news[] = new self(clone $sql);
 
             $sql->next();

@@ -3,7 +3,6 @@
 
 $id = rex_request('id', 'int', 0);
 $clang = rex_request('clang', 'int', 0);
-$sort = rex_request('sort', 'string', 'desc');
 
 $now = new DateTime();
 
@@ -100,8 +99,7 @@ if ($func == '') {
     $list->removeColumn('status');
     $list->addTableColumnGroup(array(40, '*', 120, 50, 50, 50, 50));
 
-    $list->setColumnSortable('publishedAt', $sort);
-    $list->setColumnSortable('title', $sort);
+    $list->setColumnParams('title', array('func' => 'edit', 'id' => '###id###'));
 
     $list->setColumnFormat('publishedAt', 'custom', function ($params) use ($list, $now, $clang, $I18N, $REX) {
         $publishedAt = new DateTime($list->getValue('publishedAt'));

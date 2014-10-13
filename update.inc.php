@@ -12,9 +12,15 @@ $REX['ADDON']['update']['asd_news'] = 1;
 $configFile = rex_path::addonData('asd_news', 'config.json');
 $config = json_decode(file_get_contents($configFile), true);
 
+unset($config['include-css']);
+
 if(!isset($config['min-archive'])) {
     $config['min-archive'] = 15;
     file_put_contents($configFile,  json_encode($config));
 }
 
+if(!isset($config['pagination'])) {
+    $config['pagination'] = 'pager';
+    file_put_contents($configFile,  json_encode($config));
+}
 ?>

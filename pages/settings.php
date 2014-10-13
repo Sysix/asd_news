@@ -2,7 +2,7 @@
 
 /** @var i18n $I18N */
 
-if(!$REX['USER']->hasPerm('asd_news[settings]') && !$REX['USER']->isAdmin()) {
+if (!$REX['USER']->hasPerm('asd_news[settings]') && !$REX['USER']->isAdmin()) {
     echo rex_warning($I18N->msg('asd_news_no_access'));
     exit();
 }
@@ -41,19 +41,19 @@ if ($func == 'update') {
         'max-per-page' => 'int',
         'min-archive' => 'int',
         'published-lang' => 'string',
-        'include-css' => 'string'
+        'pagination' => 'string'
     ));
 
     if ($saves['max-per-page'] < 1 || $saves['max-per-page'] > 50) {
         $saves['max-per-page'] = 50;
     }
 
-    if($saves['min-archive'] < 5 || $saves['min-archive'] > 9999) {
+    if ($saves['min-archive'] < 5 || $saves['min-archive'] > 9999) {
         $saves['min-archive'] = 15;
     }
 
     // set min 1 page full with news
-    if($saves['max-per-page'] > $saves['min-archive']) {
+    if ($saves['max-per-page'] > $saves['min-archive']) {
         $saves['min-archive'] = $saves['max-per-page'];
     }
 
@@ -61,7 +61,7 @@ if ($func == 'update') {
 
         $config = array_merge($config, $saves);
 
-        if(file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($saves))) {
+        if (file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($saves))) {
             echo rex_info($I18N->msg('asd_news_settings_saved'));
         } else {
             echo rex_warning($I18N->msg('asd_news_settings_not_saved'));
@@ -71,19 +71,19 @@ if ($func == 'update') {
 
     if ($installModul_1 || $installModul_2 || $installModul_3) {
 
-        if($installModul_1) {
+        if ($installModul_1) {
             $eingabe = rex_asd_news_utils::getModulCode('modulEingabe_1.php');
             $ausgabe = rex_asd_news_utils::getModulCode('modulAusgabe_1.php');
             $name = ASD_NEWS_MODUL_1;
         }
 
-        if($installModul_2) {
+        if ($installModul_2) {
             $eingabe = rex_asd_news_utils::getModulCode('modulEingabe_2.php');
             $ausgabe = rex_asd_news_utils::getModulCode('modulAusgabe_2.php');
             $name = ASD_NEWS_MODUL_2;
         }
 
-        if($installModul_3) {
+        if ($installModul_3) {
             $eingabe = rex_asd_news_utils::getModulCode('modulEingabe_3.php');
             $ausgabe = rex_asd_news_utils::getModulCode('modulAusgabe_3.php');
             $name = ASD_NEWS_MODUL_3;
@@ -110,35 +110,35 @@ if ($func == 'update') {
 }
 
 $sql = new rex_sql();
-$sql->setQuery('SELECT id FROM `' . $REX['TABLE_PREFIX'] . 'module` WHERE `name` = "'.ASD_NEWS_MODUL_1.'"');
-$disabledModul_1 =  ($sql->getRows()) ? ' disabled="disabled"' : '';
+$sql->setQuery('SELECT id FROM `' . $REX['TABLE_PREFIX'] . 'module` WHERE `name` = "' . ASD_NEWS_MODUL_1 . '"');
+$disabledModul_1 = ($sql->getRows()) ? ' disabled="disabled"' : '';
 
 $sql = new rex_sql();
-$sql->setQuery('SELECT id FROM `' . $REX['TABLE_PREFIX'] . 'module` WHERE `name` = "'.ASD_NEWS_MODUL_2.'"');
-$disabledModul_2 =  ($sql->getRows()) ? ' disabled="disabled"' : '';
+$sql->setQuery('SELECT id FROM `' . $REX['TABLE_PREFIX'] . 'module` WHERE `name` = "' . ASD_NEWS_MODUL_2 . '"');
+$disabledModul_2 = ($sql->getRows()) ? ' disabled="disabled"' : '';
 
 $sql = new rex_sql();
-$sql->setQuery('SELECT id FROM `' . $REX['TABLE_PREFIX'] . 'module` WHERE `name` = "'.ASD_NEWS_MODUL_3.'"');
-$disabledModul_3 =  ($sql->getRows()) ? ' disabled="disabled"' : '';
+$sql->setQuery('SELECT id FROM `' . $REX['TABLE_PREFIX'] . 'module` WHERE `name` = "' . ASD_NEWS_MODUL_3 . '"');
+$disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
 
 ?>
 <style>
     .asd-modul-buttons input {
-        margin:4px 0;
+        margin: 4px 0;
     }
 </style>
 <script>
-jQuery(document).ready(function($) {
+    jQuery(document).ready(function ($) {
 
-    function asd_liveUpdate(input, output) {
-        input.on('keyup mouseup change keydown', function() {
-           output.html(input.val());
-        });
-    }
+        function asd_liveUpdate(input, output) {
+            input.on('keyup mouseup change keydown', function () {
+                output.html(input.val());
+            });
+        }
 
-    asd_liveUpdate($('#min-archive-input'), $('#asd_news_min_archive_text'));
+        asd_liveUpdate($('#min-archive-input'), $('#asd_news_min_archive_text'));
 
-});
+    });
 </script>
 <div class="rex-addon-output">
     <div class="rex-form">
@@ -155,36 +155,35 @@ jQuery(document).ready(function($) {
                             <input class="rex-form-text" type="number" name="max-per-page" min="1" max="50"
                                    value="<?php echo $config['max-per-page'] ?>">
                         </p>
+                    </div>
+
+                    <div class="rex-form-row">
                         <p class="rex-form-text">
                             <label><?php echo $I18N->msg('asd_news_settings_min_archive', $config['min-archive']); ?></label>
                             <input class="rex-form-text" type="number" name="min-archive" min="5" max="9999"
                                    value="<?php echo $config['min-archive'] ?>" id="min-archive-input">
                         </p>
                     </div>
+
+                    <div class="rex-form-row">
+                        <p class="rex-form-text">
+                            <label>Pagination</label>
+                            <select name="pagination">
+                                <?php
+
+                                foreach (array(
+                                             'site-number' => 'Seitenzahl',
+                                             'pager' => 'Vor/Zurück Button') as $value => $desc) {
+
+                                    $selected = ($value == $config['pagination']) ? ' selected="selected"' : '';
+                                    echo '<option value="' . $value . '"' . $selected . '>' . $desc . '</option>';
+
+                                }
+                                ?>
+                            </select>
+                        </p>
+                    </div>
                 </div>
-                <legend><?php echo $I18N->msg('asd_news_include_css'); ?></legend>
-                <div class="rex-form-wrapper">
-                    <?php
-
-                    foreach (array(
-                                 'false' => $I18N->msg('no'),
-                                 'true' => $I18N->msg('yes')
-                             ) as $value => $description) {
-
-                        $checked = ($value == $config['include-css']) ? ' checked="checked"' : '';
-
-                        ?>
-                        <div class="rex-form-row">
-                            <p class="rex-form-radio rex-form-label-right">
-                                <input class="rex-form-radio" type="radio" name="include-css"
-                                       value="<?php echo $value ?>"<?php echo $checked ?>>
-                                <label><?php echo $description ?></label>
-                            </p>
-                        </div>
-                    <?php
-                    }
-                    ?>
-            </fieldset>
             <fieldset class="rex-form-col-1">
                 <legend><?php echo $I18N->msg('asd_news_settings_published_by'); ?></legend>
                 <div class="rex-form-wrapper">
