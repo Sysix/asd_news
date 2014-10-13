@@ -41,7 +41,9 @@ if ($func == 'update') {
         'max-per-page' => 'int',
         'min-archive' => 'int',
         'published-lang' => 'string',
-        'pagination' => 'string'
+        'pagination' => 'string',
+        'pagination-css-id' => 'string',
+        'pager-css-id' => 'string'
     ));
 
     if ($saves['max-per-page'] < 1 || $saves['max-per-page'] > 50) {
@@ -56,6 +58,10 @@ if ($func == 'update') {
     if ($saves['max-per-page'] > $saves['min-archive']) {
         $saves['min-archive'] = $saves['max-per-page'];
     }
+
+    // Fix ID Anker
+    $saves['pagination-css-id'] = str_replace('#', '', $saves['pagination-css-id']);
+    $saves['pager-css-id'] = str_replace('#', '', $saves['pager-css-id']);
 
     if ($sendit) {
 
@@ -172,8 +178,8 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                                 <?php
 
                                 foreach (array(
-                                             'site-number' => 'Seitenzahl',
-                                             'pager' => 'Vor/Zurück Button') as $value => $desc) {
+                                             'site-number' => $I18N->msg('asd_news_site_numbers'),
+                                             'pager' => $I18N->msg('asd_news_prev_next_buttons')) as $value => $desc) {
 
                                     $selected = ($value == $config['pagination']) ? ' selected="selected"' : '';
                                     echo '<option value="' . $value . '"' . $selected . '>' . $desc . '</option>';
@@ -184,60 +190,105 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                         </p>
                     </div>
                 </div>
-            <fieldset class="rex-form-col-1">
-                <legend><?php echo $I18N->msg('asd_news_settings_published_by'); ?></legend>
-                <div class="rex-form-wrapper">
-                    <?php
+                <fieldset class="rex-form-col-1">
+                    <legend><?php echo $I18N->msg('asd_news_settings_published_by'); ?></legend>
+                    <div class="rex-form-wrapper">
+                        <?php
 
-                    foreach (array(
-                                 'single' => $I18N->msg('asd_news_current_lang'),
-                                 'all' => $I18N->msg('asd_news_all_lang')
-                             ) as $value => $description) {
+                        foreach (array(
+                                     'single' => $I18N->msg('asd_news_current_lang'),
+                                     'all' => $I18N->msg('asd_news_all_lang')
+                                 ) as $value => $description) {
 
-                        $checked = ($value == $config['published-lang']) ? ' checked="checked"' : '';
+                            $checked = ($value == $config['published-lang']) ? ' checked="checked"' : '';
 
+                            ?>
+                            <div class="rex-form-row">
+                                <p class="rex-form-radio rex-form-label-right">
+                                    <input class="rex-form-radio" type="radio" name="published-lang"
+                                           value="<?php echo $value ?>"<?php echo $checked ?>>
+                                    <label><?php echo $description ?></label>
+                                </p>
+                            </div>
+                        <?php
+                        }
                         ?>
+                    </div>
+                </fieldset>
+                <fieldset class="rex-form-col-1">
+                    <legend><?php echo $I18N->msg('modules'); ?></legend>
+                    <div class="rex-form-wrapper">
                         <div class="rex-form-row">
-                            <p class="rex-form-radio rex-form-label-right">
-                                <input class="rex-form-radio" type="radio" name="published-lang"
-                                       value="<?php echo $value ?>"<?php echo $checked ?>>
-                                <label><?php echo $description ?></label>
+                            <p class="rex-form-submit rex-form-submit-2 asd-modul-buttons">
+                                <input class="rex-form-submit" type="submit" name="modul_1"
+                                       value='<?php echo $I18N->msg('asd_news_install_modul', ASD_NEWS_MODUL_1); ?>'<?php echo $disabledModul_1 ?>/>
+
+                                <input class="rex-form-submit" type="submit" name="modul_2"
+                                       value='<?php echo $I18N->msg('asd_news_install_modul', ASD_NEWS_MODUL_2); ?>'<?php echo $disabledModul_2 ?>/>
+
+                                <input class="rex-form-submit" type="submit" name="modul_3"
+                                       value='<?php echo $I18N->msg('asd_news_install_modul', ASD_NEWS_MODUL_3); ?>'<?php echo $disabledModul_3 ?>/>
                             </p>
                         </div>
-                    <?php
-                    }
-                    ?>
-                </div>
-            </fieldset>
-            <fieldset class="rex-form-col-1">
-                <legend><?php echo $I18N->msg('modules'); ?></legend>
-                <div class="rex-form-wrapper">
-                    <div class="rex-form-row">
-                        <p class="rex-form-submit rex-form-submit-2 asd-modul-buttons">
-                            <input class="rex-form-submit" type="submit" name="modul_1"
-                                   value='<?php echo $I18N->msg('asd_news_install_modul', ASD_NEWS_MODUL_1); ?>'<?php echo $disabledModul_1 ?>/>
-
-                            <input class="rex-form-submit" type="submit" name="modul_2"
-                                   value='<?php echo $I18N->msg('asd_news_install_modul', ASD_NEWS_MODUL_2); ?>'<?php echo $disabledModul_2 ?>/>
-
-                            <input class="rex-form-submit" type="submit" name="modul_3"
-                                   value='<?php echo $I18N->msg('asd_news_install_modul', ASD_NEWS_MODUL_3); ?>'<?php echo $disabledModul_3 ?>/>
-                        </p>
                     </div>
-                </div>
-            </fieldset>
-            <fieldset class="rex-form-raw">
-                <legend></legend>
-                <div class="rex-form-wrapper">
-                    <div class="rex-form-row">
-                        <p class="rex-form-submit rex-form-submit-2">
+                </fieldset>
+                <fieldset class="rex-form-raw">
+                    <legend></legend>
+                    <div class="rex-form-wrapper">
+                        <div class="rex-form-row">
+                            <span class="js-toggle-button" style="
+                                margin:5px;
+                                cursor:pointer;
+                            "><span class="rex-i-element rex-i-generic-add" style="
+                                display: inline-block;
+                                vertical-align: middle;
+                            "></span> erweiterte Optionen</span>
 
-                            <input class="rex-form-submit" type="submit" id="sendit" name="sendit"
-                                   value="<?php echo $I18N->msg('submit'); ?>"/>
-                        </p>
+                            <div class="js-toggle-content">
+
+                                <div class="rex-form-row">
+                                    <p class="rex-form-text">
+                                        <label>Pagination CSS ID</label>
+                                        <input class="rex-form-text" type="text" name="pagination-css-id"
+                                               value="<?php echo $config['pagination-css-id'] ?>">
+                                    </p>
+                                </div>
+
+                                <div class="rex-form-row">
+                                    <p class="rex-form-text">
+                                        <label>Pager CSS ID</label>
+                                        <input class="rex-form-text" type="text" name="pager-css-id"
+                                               value="<?php echo $config['pager-css-id'] ?>">
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="rex-form-row">
+                            <p class="rex-form-submit rex-form-submit-2">
+
+                                <input class="rex-form-submit" type="submit" id="sendit" name="sendit"
+                                       value="<?php echo $I18N->msg('submit'); ?>"/>
+                            </p>
+                        </div>
                     </div>
-                </div>
-            </fieldset>
+                </fieldset>
         </form>
     </div>
 </div>
+
+<script>
+    jQuery(document).ready(function ($) {
+        $('.js-toggle-content').hide();
+
+        $('.js-toggle-button').click(function () {
+            var div = $(this).next('.js-toggle-content');
+
+            if (div.is(':hidden')) {
+                div.fadeIn(200);
+            } else {
+                div.fadeOut(200);
+            }
+        });
+    });
+</script>

@@ -32,6 +32,8 @@ asd_news_include_css = include ASD News .CSS file
 asd_news_install_modul = install modul "{0}"
 asd_news_no_access = You do not have the required rights for this area
 asd_news_modul_added = ASD News modul was added
+asd_news_site_numbers = page numbers
+asd_news_prev_next_buttons = prev/next Buttons
 
 asd_news_faq = F.A.Q
 asd_news_faq_question_1 = Works the addon with the <code>url_control</code> plugin?

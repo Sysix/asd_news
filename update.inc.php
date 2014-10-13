@@ -23,4 +23,14 @@ if(!isset($config['pagination'])) {
     $config['pagination'] = 'pager';
     file_put_contents($configFile,  json_encode($config));
 }
+
+if(!isset($config['pagination-css-id'])) {
+    $config['pagination-css-id'] = 'asd-pagination';
+    file_put_contents($configFile,  json_encode($config));
+}
+
+if(!isset($config['pager-css-id'])) {
+    $config['pager-css-id'] = 'asd-pager';
+    file_put_contents($configFile,  json_encode($config));
+}
 ?>

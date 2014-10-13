@@ -135,7 +135,12 @@ class rex_asd_pager extends rex_pager
 
         if ($REX['ADDON']['asd_news']['config']['pagination'] == 'site-number') {
 
-            $return[] = '<ul class="pagination" id="asd-pagination">';
+            $id = '';
+            if ($REX['ADDON']['asd_news']['config']['pagination-css-id'] != '') {
+                $id = ' id="' . $REX['ADDON']['asd_news']['config']['pagination-css-id'] . '"';
+            }
+
+            $return[] = '<ul class="pagination"' . $id . '>';
 
             // Prev Button
             $href = rex_getUrl('', '', array($this->getCursorName() => $this->getPrevPage()));
@@ -170,7 +175,12 @@ class rex_asd_pager extends rex_pager
 
         if ($REX['ADDON']['asd_news']['config']['pagination'] == 'pager') {
 
-            $return[] = '<ul class="pager" id="asd-pager">';
+            $id = '';
+            if ($REX['ADDON']['asd_news']['config']['pager-css-id'] != '') {
+                $id = ' id="' . $REX['ADDON']['asd_news']['config']['pager-css-id'] . '"';
+            }
+
+            $return[] = '<ul class="pager"' . $id . '>';
 
             if ($this->getCurrentPage() != $this->getPrevPage()) {
                 $return[] = '<li class="previous"><a href="' . rex_getUrl('', '', array($this->getCursorName() => $this->getPrevPage())) . '">prev</a></li>';
