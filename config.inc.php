@@ -1,7 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 /** @var i18n $I18N */
 
 if ($REX['REDAXO'] && is_object($REX['USER'])) {
@@ -9,7 +7,7 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
 
     // register addon
     $REX['ADDON']['name']['asd_news'] = $I18N->msg('asd_news');
-    $REX['ADDON']['version']['asd_news'] = '1.3.0 DEV';
+    $REX['ADDON']['version']['asd_news'] = '1.3.0';
     $REX['ADDON']['author']['asd_news'] = 'ArtStudioDESIGN';
     $REX['ADDON']['supportpage']['asd_news'] = 'http://redaxo.org/forum/';
     $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';

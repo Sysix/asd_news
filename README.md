@@ -17,6 +17,7 @@ Update 1.3.0
 ------------
 * CKEditor Support
 * Admin's müssen jetzt die benötigten Rechte besitzen
+* Bilder die das Addon verwendet, können nicht gelöscht werden
 * anderen jQuery Datetimepicker thx@RexDude & thx@xdan
 * Pagination-Auswahl zwischen Seitenanzahl & Vor/Zurück-Buttons
 * Pagination/Pager CSS-ID über Einstellungen verwaltbar
