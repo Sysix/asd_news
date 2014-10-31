@@ -157,6 +157,9 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
     rex_register_extension('CLANG_ADDED', 'asd_news_addClang');
     rex_register_extension('CLANG_DELETED', 'asd_news_deleteClang');
 
+    // check if image in use
+    rex_register_extension('OOMEDIA_IS_IN_USE', 'rex_asd_news_utils::isImageInUse');
+
     // autoload Plugins
     $plugins = OOPlugin::getAvailablePlugins('asd_news');
     foreach ($plugins as $name) {
