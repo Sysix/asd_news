@@ -237,7 +237,7 @@ class rex_asd_news
      * ));
      *
      * @param array $tagNames
-     * @return self
+     * @return string|bool
      */
     public function replaceSeoTags(array $tagNames)
     {
@@ -251,6 +251,8 @@ class rex_asd_news
 
                 $document = new DOMDocument();
                 $document->formatOutput = true;
+                $document->encoding = 'utf-8';
+
                 @$document->loadHTML($subject['subject']);
                 $metaList = $document->getElementsByTagName('meta');
 
@@ -297,15 +299,18 @@ class rex_asd_news
 
                 }
 
+                // get the doctype
+                preg_match('/<!doctype([^>]*)>/i', $subject['subject'], $doctype);
+
+                return $doctype[0]. $document->saveHTML($document->documentElement);
+
             } catch (DOMException $e) {
                 echo rex_warning($e->getMessage());
             }
 
-            return $document->saveHTML();
-
         });
 
-        return $this;
+        return false;
     }
 
     /**
