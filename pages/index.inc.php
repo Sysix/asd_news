@@ -15,6 +15,9 @@ if(!$subpage) {
 $BaseDir = 'index.php?page='.$page.'&amp;subpage='.$subpage;
 $baseDirFunc = $BaseDir.'&amp;func='.$func;
 
+if(!$REX['USER']->hasPerm('asd_news[faq]') && $REX['USER']->isAdmin()) {
+    echo rex_warning('Sie besitzen nicht alle Rechte um das Addon voll nutzen zu können.');
+}
 
 switch($subpage) {
     case 'news':

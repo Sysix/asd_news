@@ -28,15 +28,18 @@ asd_news_settings_not_saved = Ein Fehler ist aufgetreten: Einstellungen konnten 
 
 asd_news_current_lang = ausgewählte Sprache
 asd_news_all_lang = alle Sprachen
-asd_news_include_css = ASD News .CSS Datei einbinden
 asd_news_install_modul = "{0}" Modul installieren
 asd_news_no_access = Sie haben nicht die erforderlichen Rechte für diesen Bereich
 asd_news_modul_added = ASD News Modul wurde hinzugefügt
 asd_news_site_numbers = Seitenanzahl
 asd_news_prev_next_buttons = Vor/Zurück Buttons
+asd_news_admin_perm_need = Sie besitzen nicht alle Rechte um das Addon voll nutzen zu können.
 
 asd_news_faq = F.A.Q
 asd_news_faq_question_1 = Funktioniert das Addon mit dem <code>url_control</code> Plugin?
 asd_news_faq_answer_1 = Ja es funktioniert, es müssen nur folgende Einstellungen gemacht werden:<br /><img src="../{0}/asd_news/help_url_control_settings.png" style="max-width: 100%;">
+
+asd_news_faq_question_2 = Warum sehe ich keine Einstellungen mehr?
+asd_news_faq_answer_2 = Sie brauchen dafür die entsprechenden Benutzerrechte.
 
 submit = abschicken

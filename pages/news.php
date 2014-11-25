@@ -190,7 +190,6 @@ if ($func == '') {
 
 }
 
-
 if ($func == 'add' || $func == 'edit') {
 
     if (rex_asd_news::$SEO_URL_CONTROL) {
@@ -215,6 +214,10 @@ if ($func == 'add' || $func == 'edit') {
 
     $field = $form->addMediaField('picture');
     $field->setLabel($I18N->msg('asd_news_picture'));
+
+    if(OOAddon::isAvailable('metainfo')) {
+        $form->addRawField($form->getMetainfoExtension());
+    }
 
     $field = $form->addField('textarea', 'text', null, array(
         'internal::fieldClass' => 'rex_form_element_asd_news_textarea'

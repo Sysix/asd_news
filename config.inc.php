@@ -46,19 +46,28 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
 
     $REX['ADDON']['pages']['asd_news'] = array($news, $rubric, $settings, $faq);
 
-    // TODO: Metainfo intergration
-    /*
-        if(OOAddon::isAvailable('metainfo')) {
-            $meta = new rex_be_page('Felder', array(
-                'page' => 'asd_news',
-                'subpage' => 'metainfo'
-            ));
-            $meta->setHref('index.php?page=asd_news&subpage=metainfo');
-            $meta->setPath(rex_path::addon('metainfo', 'pages/field.inc.php'));
+    if(OOAddon::isAvailable('metainfo')) {
+        $meta = new rex_be_page('Felder', array(
+            'page' => 'asd_news',
+            'subpage' => 'metainfo'
+        ));
+        $meta->setHref('index.php?page=asd_news&subpage=metainfo');
 
-            $REX['ADDON']['pages']['asd_news'][] = $meta;
-        }
-    */
+        $REX['ADDON']['pages']['asd_news'][] = $meta;
+
+        rex_register_extension('PAGE_CHECKED', function() use ($REX) {
+            $metaTables = OOAddon::getProperty('metainfo', 'metaTables', array());
+            $metaTables['asd_'] = $REX['TABLE_PREFIX'] . 'asd_news';
+            OOAddon::setProperty('metainfo', 'metaTables', $metaTables);
+
+            // Prefix hinzufügen
+            $prefixes = OOAddon::getProperty('metainfo', 'prefixes', array());
+            $prefixes[] = 'asd_';
+            OOAddon::setProperty('metainfo', 'prefixes', $prefixes);
+        });
+        // Meta Tables hinzufügen
+
+    }
 }
 
 
@@ -68,7 +77,6 @@ $REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON'
 
 // Metainfo
 $page = rex_request('page', 'string', '');
-
 
 require_once rex_path::addon('asd_news', 'functions/rex_asd_news_language.php');
 require_once rex_path::addon('asd_news', 'functions/asd_news_jquery.php');

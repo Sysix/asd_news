@@ -13,6 +13,12 @@ Features
 * News ab einer bestimmten Anzahl zu archivieren
 * fertige Module via Knopfdruck installieren
 
+Update 1.3.1
+------------
+* `$news->replaceSeoTags()` utf-8 Bugfix
+* F.A.Q Eintrag "Warum sehe ich keine Einstellungen mehr?" hinzugefügt
+* 
+
 Update 1.3.0
 ------------
 * CKEditor Support
