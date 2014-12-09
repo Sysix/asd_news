@@ -253,9 +253,8 @@ class rex_asd_news
                 $document->formatOutput = true;
                 $document->encoding = 'utf-8';
 
-                @$document->loadHTML($subject['subject']);
+                @$document->loadHTML('<?xml encoding="utf-8" ?>' . $subject['subject']);
                 $metaList = $document->getElementsByTagName('meta');
-
 
                 foreach ($metaList as $meta) {
                     /** @var DOMElement $meta */
