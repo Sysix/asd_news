@@ -205,16 +205,6 @@ if ($func == 'add' || $func == 'edit') {
     $field = $form->addTextField('title');
     $field->setLabel($I18N->msg('asd_news_title'));
 
-    $field = $form->addSelectField('category');
-    $field->setLabel($I18N->msg('content_category'));
-
-    $select = $field->getSelect();
-    $select->addSqlOptions('SELECT `name`, `id` FROM ' . $REX['TABLE_PREFIX'] . 'asd_news_category');
-    $select->setSize(1);
-
-    $field = $form->addMediaField('picture');
-    $field->setLabel($I18N->msg('asd_news_picture'));
-
     if(OOAddon::isAvailable('metainfo')) {
         $form->addRawField($form->getMetainfoExtension());
     }
