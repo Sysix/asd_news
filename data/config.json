@@ -4,5 +4,9 @@
     "pagination": "pager",
     "min-archive": 15,
     "pagination-css-id": "asd-pagination",
-    "pager-css-id": "asd-pager"
+    "pager-css-id": "asd-pager",
+    "sql": {
+        "category": "asd_category",
+        "picture": "asd_picture"
+    }
 }

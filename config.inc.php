@@ -1,6 +1,9 @@
 <?php
 
-/** @var i18n $I18N */
+/**
+ * @var array $REX
+ * @var i18n $I18N
+ */
 
 if ($REX['REDAXO'] && is_object($REX['USER'])) {
     $I18N->appendFile(rex_path::addon('asd_news', 'lang' . DIRECTORY_SEPARATOR));
@@ -65,9 +68,6 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
 $REX['ADDON']['asd_news']['configFile'] = rex_path::addonData('asd_news', 'config.json');
 $REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON']['asd_news']['configFile']), true);
 
-// Metainfo
-$page = rex_request('page', 'string', '');
-
 require_once rex_path::addon('asd_news', 'functions/rex_asd_news_language.php');
 require_once rex_path::addon('asd_news', 'functions/asd_news_jquery.php');
 require_once rex_path::addon('asd_news', 'classes/rex_news_form.php');
@@ -102,8 +102,9 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
     $func = rex_request('func');
 
     if ($page == 'asd_news') {
-        rex_register_extension('PAGE_HEADER', 'asd_news_setjQueryTags');
+        require_once rex_path::addon('asd_news', 'classes/rex_asd_news_ajaxHandler.php');
 
+        rex_register_extension('PAGE_HEADER', 'asd_news_setjQueryTags');
         // Ajax Publish
         if ($func == 'publish') {
             $id = rex_post('id', 'int');
@@ -114,35 +115,7 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
                 $time = new DateTime();
             }
 
-            $sql = new rex_sql();
-            $sql->setTable($REX['TABLE_PREFIX'] . 'asd_news');
-            $sql->setWhere('`id` = ' . $id . ' AND `clang` = ' . $clang);
-
-            if ($REX['ADDON']['asd_news']['config']['published-lang'] == 'all') {
-                $sql->setWhere('`id` = ' . $id);
-            }
-
-            $sql->setValue('publishedAt', $time->format('Y-m-d H:i:s'));
-            $sql->setValue('publishedBy', $REX['USER']->getValue('user_id'));
-            $sql->setValue('status', 1);
-
-            $sql->update();
-
-            $urlBase = 'index.php?list=232cc606fc1a5fb5cf5badfc8e360ae0&amp;page=asd_news&amp;subpage=news&amp;clang=' . $clang . '&amp;func=';
-
-
-            $sql->setQuery('SELECT * FROM `' . $REX['TABLE_PREFIX'] . 'asd_news` WHERE `id` = ' . $id . ' AND `clang` = ' . $clang);
-
-            echo '
-        <td>' . $id . '</td>
-        <td>' . $sql->getValue('title') . '</td>
-        <td><span>' . $time->format('Y-m-d H:i') . '</span></td>
-        <td><a href="' . $urlBase . 'unpublish&amp;id=' . $id . '" class="rex-offline" onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">' . $I18N->msg('asd_news_unpublish') . '</a></td>
-        <td><a href="' . $urlBase . 'edit&amp;id=' . $id . '">' . $I18N->msg('edit') . '</a></td>
-        <td><a href="' . $urlBase . 'delete&amp;id=' . $id . '" onclick="return confirm(\'' . $I18N->msg('asd_news_really_delete') . '\');">' . $I18N->msg('delete') . '</a></td>
-        <td><a href="' . $urlBase . 'status&amp;id=' . $id . '" class="rex-online">' . $I18N->msg('status_online') . '</a></td>
-
-            ';
+            echo rex_asd_news_ajaxHandler::publishNews($id, $clang, $time);
 
             exit();
         }
@@ -151,7 +124,6 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
     // add / remove News if lang added or removed
     rex_register_extension('CLANG_ADDED', 'asd_news_addClang');
     rex_register_extension('CLANG_DELETED', 'asd_news_deleteClang');
-
     // check if image in use
     rex_register_extension('OOMEDIA_IS_IN_USE', 'rex_asd_news_utils::isImageInUse');
 

@@ -8,6 +8,7 @@ Features
 * Kompatibel mit Plugin "url_control"
 * Mehrsprachigkeit
 * Erweiterung von Meta-Tags möglich (siehe `rex_asd_news::replaceSeoTags()`)
+* Erweiterung von Feldern möglich (dank das Metainfo-Addon)
 * SEO42 Image Manager Urls möglich
 * On/Off Schaltung von News
 * News ab einer bestimmten Anzahl zu archivieren
@@ -16,8 +17,9 @@ Features
 Update 1.3.1
 ------------
 * `$news->replaceSeoTags()` utf-8 Bugfix
+* Felder nun werden über das Addon `metainfo` verwaltet
 * F.A.Q Eintrag "Warum sehe ich keine Einstellungen mehr?" hinzugefügt
-* 
+* Code aufgeräumt
 
 Update 1.3.0
 ------------

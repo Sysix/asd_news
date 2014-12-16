@@ -5,9 +5,13 @@ class rex_asd_news
     public static $SEO_ADDON = null;
     public static $SEO_URL_CONTROL = false;
 
+    /**
+     * the old Columns, needed vor getValue()
+     */
+    const oldSQLColumns = '|category|picture|text|';
+
     /** @var  rex_sql $sql */
     public $sql;
-
 
     public static $month_de = array(
         1 => 'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
@@ -77,6 +81,9 @@ class rex_asd_news
      */
     public function getValue($name, $default = null)
     {
+        if(strpos(self::oldSQLColumns, '|' . $name . '|')) {
+            $name = 'asd_' . $name;
+        }
         return $this->sql->getValue($name, $default);
     }
 
@@ -111,17 +118,23 @@ class rex_asd_news
      */
     public function getImage($imageType = null)
     {
+        global $REX;
 
-        $default = '/files/' . $this->getValue('picture');
-        $defaultType = 'index.php?rex_img_type=' . $imageType . '&amp;rex_img_file=' . $this->getValue('picture');
+        $pictureCol = $REX['ADDON']['asd_news']['config']['sql']['picture'];
+        $default = '/files/' . $this->getValue($pictureCol);
+        $defaultType = 'index.php?rex_img_type=' . $imageType . '&amp;rex_img_file=' . $this->getValue($pictureCol);
+
+        if(rex_extension_is_registered('ASD_NEWS_GETIMAGE')) {
+            return rex_register_extension_point('ASD_NEWS_GETIMAGE', $pictureCol);
+        }
 
         if (self::$SEO_ADDON == 'seo42') {
 
             if ($imageType != null) {
-                return seo42::getImageManagerFile($this->getValue('picture'), $imageType);
+                return seo42::getImageManagerFile($this->getValue($pictureCol), $imageType);
             }
 
-            return seo42::getMediaFile($this->getValue('picture'));
+            return seo42::getMediaFile($this->getValue($pictureCol));
 
         }
 
@@ -187,10 +200,10 @@ class rex_asd_news
      * return string
      */
     public function getRubricName() {
+        global $REX;
         static $rubrics = array();
 
         if(empty($rubrics)) {
-            global $REX;
 
             $sql = new rex_sql();
             $sql->setQuery('SELECT * FROM `' . $REX['TABLE_PREFIX'] . 'asd_news_category`');
@@ -202,7 +215,7 @@ class rex_asd_news
 
         }
 
-        return $rubrics[$this->getValue('category')];
+        return $rubrics[$this->getValue($REX['ADDON']['asd_news']['config']['sql']['category'])];
 
     }
 
@@ -343,7 +356,7 @@ class rex_asd_news
     public static function getNewsByCategory($cat, $clang = null)
     {
         return self::getByWhere(array(
-            'category' => '= ' . (int)$cat
+            self::$categoryColumn => '= ' . (int)$cat
         ), $clang);
     }
 

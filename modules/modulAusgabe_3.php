@@ -8,7 +8,7 @@ if ($news_id) {
     $news = rex_asd_news::getNewsById($news_id);
 
     $url = $news->getUrl();
-    $text = $news->getValue('text');
+    $text = $news->getValue('asd_text');
     $date = $news->getPublishDate();
     $title = $news->getValue('title');
     $id = $news->getValue('id');
