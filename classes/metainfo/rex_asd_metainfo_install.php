@@ -55,7 +55,7 @@ class rex_asd_metainfo_install
      */
     public static function checkErrorMessage($args)
     {
-        $args = func_get_args();
+        $args = (is_array($args)) ? $args : func_get_args();
 
         $returnString = '';
         foreach ($args as $toCheck) {
@@ -78,11 +78,20 @@ class rex_asd_metainfo_install
      */
     public static function delFields()
     {
-        return self::checkErrorMessage(
-            a62_delete_field('asd_category'),
-            a62_delete_field('asd_picture'),
-            a62_delete_field('asd_text')
-        );
+        global $REX;
+
+        $sql = new rex_sql();
+        $sql->setQuery('SELECT `name` FROM ' . $REX['TABLE_PREFIX'] . '62_params WHERE `name` LIKE "asd_%"');
+
+        $delFields = array();
+
+        for($i = 1; $i <= $sql->getRows(); $i++) {
+            $delFields[] = a62_delete_field($sql->getValue('name'));
+            var_dump($sql->getValue('name'));
+            $sql->next();
+        }
+
+        return self::checkErrorMessage($delFields);
     }
 
 }

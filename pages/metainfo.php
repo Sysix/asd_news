@@ -2,10 +2,8 @@
 
 $prefix = 'asd_';
 $metaTable = $REX['TABLE_PREFIX'] . 'asd_news';
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
-echo rex_warning('<b>This site is not released,. You can test the page and give feedback</b><br>
+echo rex_warning('<b>This site is not released, you can test the page and give feedback</b><br>
 <a href="https://github.com/Sysix-Coding/asd_news/issues">https://github.com/Sysix-Coding/asd_news/issues</a>');
 
 /**
@@ -77,6 +75,7 @@ if ($func == '') {
 }
 //------------------------------> Formular
 elseif ($func == 'edit' || $func == 'add') {
+    echo '<script src="../' . $REX['MEDIA_ADDON_DIR'] . '/metainfo/metainfo.js" type="text/javascript"></script>';
     $form = new rex_asd_a62_tableExpander($prefix, $metaTable, $REX['TABLE_PREFIX'] . '62_params', $I18N->msg('minfo_field_fieldset'), 'field_id=' . $field_id);
 
     if ($func == 'edit') {

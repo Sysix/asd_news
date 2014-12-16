@@ -55,18 +55,8 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
 
         $REX['ADDON']['pages']['asd_news'][] = $meta;
 
-        rex_register_extension('PAGE_CHECKED', function() use ($REX) {
-            $metaTables = OOAddon::getProperty('metainfo', 'metaTables', array());
-            $metaTables['asd_'] = $REX['TABLE_PREFIX'] . 'asd_news';
-            OOAddon::setProperty('metainfo', 'metaTables', $metaTables);
-
-            // Prefix hinzufügen
-            $prefixes = OOAddon::getProperty('metainfo', 'prefixes', array());
-            $prefixes[] = 'asd_';
-            OOAddon::setProperty('metainfo', 'prefixes', $prefixes);
-        });
         // Meta Tables hinzufügen
-
+        rex_register_extension('PAGE_CHECKED', 'rex_asd_metainfo_install::setProperty');
     }
 }
 
@@ -84,8 +74,7 @@ require_once rex_path::addon('asd_news', 'classes/rex_news_form.php');
 require_once rex_path::addon('asd_news', 'classes/rex_asd_news.php');
 require_once rex_path::addon('asd_news', 'classes/rex_asd_news_utils.php');
 require_once rex_path::addon('asd_news', 'classes/rex_asd_pager.php');
-
-require_once rex_path::addon('asd_news', 'classes/rex_form_element_asd_news_textarea.php');
+require_once rex_path::addon('asd_news', 'classes/metainfo/rex_asd_metainfo_install.php');
 
 // Seo Addon setzen
 foreach (array('rexseo', 'yrewrite', 'seo42') as $seoAddon) {

@@ -209,12 +209,6 @@ if ($func == 'add' || $func == 'edit') {
         $form->addRawField($form->getMetainfoExtension());
     }
 
-    $field = $form->addField('textarea', 'text', null, array(
-        'internal::fieldClass' => 'rex_form_element_asd_news_textarea'
-    ));
-    $field->setLabel($I18N->msg('asd_news_text'));
-
-
     $form->addHiddenField('clang', (int)$clang);
     $form->addHiddenField('updatedAt', $now->format('Y-m-d H:i:s'));
     $form->addHiddenField('updatedBy', $REX['USER']->getValue('user_id'));

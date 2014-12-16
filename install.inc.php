@@ -1,7 +1,7 @@
 <?php
 
 $REX['ADDON']['install']['asd_news'] = 1;
-
+$REX['ADDON']['installmsg']['asd_news'] = '';
 /*
 if(!OOAddon::isAvailable('metainfo')) {
     $REX['ADDON']['install']['asd_news'] = 0;
@@ -51,11 +51,17 @@ if($sql->hasError()) {
     $REX['ADDON']['installmsg']['asd_news'] .= $msg;
 }
 
-include_once rex_path::addon('asd_news', 'classes/metainfo/rex_asd_metainfo_install.php');
-
-rex_asd_metainfo_install::setProperty();
-if($error = rex_asd_metainfo_install::addFields()) {
+if(!OOAddon::isAvailable('metainfo')) {
     $REX['ADDON']['install']['asd_news'] = 0;
-    $REX['ADDON']['installmsg']['asd_news'] .= $error;;
+    $REX['ADDON']['installmsg']['asd_news'] .= 'Metainfo Addon nicht installiert';
+
+} else {
+    include_once rex_path::addon('asd_news', 'classes/metainfo/rex_asd_metainfo_install.php');
+
+    rex_asd_metainfo_install::setProperty();
+    if ($error = rex_asd_metainfo_install::addFields()) {
+        $REX['ADDON']['install']['asd_news'] = 0;
+        $REX['ADDON']['installmsg']['asd_news'] .= $error;
+    }
 }
 ?>
