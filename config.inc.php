@@ -10,7 +10,7 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
 
     // register addon
     $REX['ADDON']['name']['asd_news'] = $I18N->msg('asd_news');
-    $REX['ADDON']['version']['asd_news'] = '1.3.1 DEV';
+    $REX['ADDON']['version']['asd_news'] = '1.4.0 DEV';
     $REX['ADDON']['author']['asd_news'] = 'ArtStudioDESIGN';
     $REX['ADDON']['supportpage']['asd_news'] = 'http://redaxo.org/forum/';
     $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';
@@ -18,7 +18,7 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
     // set permission
     $REX['PERM'][] = 'asd_news[]';
     $REX['EXTPERM'][] = 'asd_news[settings]';
-    $REX['EXTPERM'][] = 'asd_news[faq]';
+    $REX['EXTPERM'][] = 'asd_news[metainfo]';
 
     //set pages
     $news = new rex_be_page($I18N->msg('asd_news_news'), array(
@@ -33,6 +33,12 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
     ));
     $rubric->setHref('index.php?page=asd_news&subpage=rubric');
 
+    $faq = new rex_be_page($I18N->msg('asd_news_faq'), array(
+        'page' => 'asd_news',
+        'subpage' => 'faq'
+    ));
+    $faq->setHref('index.php?page=asd_news&subpage=faq');
+
     $settings = new rex_be_page($I18N->msg('asd_news_settings'), array(
         'page' => 'asd_news',
         'subpage' => 'settings'
@@ -40,21 +46,16 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
     $settings->setHref('index.php?page=asd_news&subpage=settings');
     $settings->setRequiredPermissions(array('asd_news[settings]'));
 
-    $faq = new rex_be_page($I18N->msg('asd_news_faq'), array(
-        'page' => 'asd_news',
-        'subpage' => 'faq'
-    ));
-    $faq->setHref('index.php?page=asd_news&subpage=faq');
-    $faq->setRequiredPermissions(array('asd_news[faq]'));
 
-    $REX['ADDON']['pages']['asd_news'] = array($news, $rubric, $settings, $faq);
+    $REX['ADDON']['pages']['asd_news'] = array($news, $rubric, $faq, $settings);
 
     if(OOAddon::isAvailable('metainfo')) {
-        $meta = new rex_be_page('Felder', array(
+        $meta = new rex_be_page($I18N->msg('asd_news_metainfo'), array(
             'page' => 'asd_news',
             'subpage' => 'metainfo'
         ));
         $meta->setHref('index.php?page=asd_news&subpage=metainfo');
+        $meta->setRequiredPermissions(array('asd_news[metainfo]'));
 
         $REX['ADDON']['pages']['asd_news'][] = $meta;
 

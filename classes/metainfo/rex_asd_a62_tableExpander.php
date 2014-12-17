@@ -60,6 +60,18 @@ class rex_asd_a62_tableExpander extends rex_a62_tableExpander
         $field->setLabel($I18N->msg('minfo_field_label_title'));
         $field->setNotice($I18N->msg('minfo_field_notice_title'));
 
+
+        $sqlColumns = $REX['ADDON']['asd_news']['config']['sql'];
+        $value = array_search($this->getValue('name'), $sqlColumns);
+
+        $field = &$this->addRadioField('asd_news_sql_column', $value);
+        /** @var rex_form_radio_element $field */
+        $field->setAttribute('class', 'rex-form-radio rex-form-label-right rex-form-read');
+        $field->setLabel($I18N->msg('asd_news_column_label'));
+        $field->addOption($I18N->msg('asd_news_column_none'), '');
+        $field->addOption($I18N->msg('asd_news_column_category'), 'category');
+        $field->addOption($I18N->msg('asd_news_column_picture'), 'picture');
+
         $gq = new rex_sql;
         $gq->setQuery('SELECT dbtype,id FROM ' . $REX['TABLE_PREFIX'] . '62_type');
         $textFields = array();
@@ -109,6 +121,33 @@ class rex_asd_a62_tableExpander extends rex_a62_tableExpander
         $field = &$this->addField('', 'restrictions', $value = null, $attributes);
         $field->setLabel($I18N->msg('minfo_field_label_restrictions'));
         $field->setAttribute('size', 10);
+    }
+
+    /**
+     * return the Value of a element, orginal from form::createElement
+     * @param $name
+     * @return array|null|string
+     */
+    public function getValue($name) {
+
+        $value = null;
+
+        $postValue = $this->elementPostValue($this->getFieldsetName(), $name);
+        if ($postValue !== null) {
+            $value = $this->stripslashes($postValue);
+        }
+
+        // Wert aus der DB nehmen, falls keiner extern und keiner im POST angegeben
+        if ($value === null && $this->sql->getRows() == 1 && $this->sql->hasValue($name)) {
+            $value = $this->sql->getValue($name);
+        }
+
+        if (is_array($value)) {
+            $value = '|' . implode('|', $value) . '|';
+        }
+
+        return $value;
+
     }
 
 }

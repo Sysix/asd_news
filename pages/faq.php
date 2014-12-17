@@ -7,6 +7,9 @@
     <div class="rex-addon-content">
         <div class="addon-template">
 
+            <h2><?php echo $I18N->msg('asd_news_faq_question_3'); ?></h2>
+            <p><?php echo $I18N->msg('asd_news_faq_answer_3'); ?></p>
+
             <h2><?php echo $I18N->msg('asd_news_faq_question_2'); ?></h2>
             <p><?php echo $I18N->msg('asd_news_faq_answer_2'); ?></p>
 

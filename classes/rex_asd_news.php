@@ -81,7 +81,7 @@ class rex_asd_news
      */
     public function getValue($name, $default = null)
     {
-        if(strpos(self::oldSQLColumns, '|' . $name . '|')) {
+        if(strpos(self::oldSQLColumns, '|' . $name . '|') !== false) {
             $name = 'asd_' . $name;
         }
         return $this->sql->getValue($name, $default);
@@ -230,17 +230,6 @@ class rex_asd_news
     }
 
     /**
-     * set the SEO Params (keywords, description, ...)
-     * at the moment use self::replaceSeoTags()
-     *
-     * @return self
-     */
-    public function setSEOParams()
-    {
-        return $this;
-    }
-
-    /**
      * replace the meta keywords, description html tags
      *
      * replaceSeoTags(array(
@@ -355,8 +344,10 @@ class rex_asd_news
      */
     public static function getNewsByCategory($cat, $clang = null)
     {
+        global $REX;
+
         return self::getByWhere(array(
-            self::$categoryColumn => '= ' . (int)$cat
+            $REX['ADDON']['asd_news']['config']['sql']['category'] => '= ' . (int)$cat
         ), $clang);
     }
 

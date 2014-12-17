@@ -1,5 +1,6 @@
 asd_news = ASD News
 asd_news_news = News
+asd_news_metainfo = SQL fields
 asd_news_status_saved = status successfully changed
 asd_news_deleted = news successfully deleted
 asd_news_title = title
@@ -35,11 +36,19 @@ asd_news_site_numbers = page numbers
 asd_news_prev_next_buttons = prev/next Buttons
 asd_news_admin_perm_need = You do not have any rights for the addon to make full use of it.
 
+asd_news_column_label = defined SQL column
+asd_news_column_none = no value
+asd_news_column_category = category
+asd_news_column_picture = picture
+
 asd_news_faq = F.A.Q
 asd_news_faq_question_1 = Works the addon with the <code>url_control</code> plugin?
 asd_news_faq_answer_1 = Yes it does, it must be made only following settings:<br /><img src="../{0}/asd_news/help_url_control_settings.png" style="max-width: 100%;">
 
 asd_news_faq_question_2 = Why do not I see more settings?
 asd_news_faq_answer_2 = All you need is the appropriate user rights.
+
+asd_news_faq_question_3 = Can I add more fiels such as preview-text or a gallery?
+asd_news_faq_answer_3 = Yes! Go to <a href=index.php?page=asd_news&amp;subpage=metainfo">SQL fields</a> and add the appropriate fields as in metainfo-AddOn. You need the appropriate rights for it.
 
 submit = submit

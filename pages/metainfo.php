@@ -3,9 +3,6 @@
 $prefix = 'asd_';
 $metaTable = $REX['TABLE_PREFIX'] . 'asd_news';
 
-echo rex_warning('<b>This site is not released, you can test the page and give feedback</b><br>
-<a href="https://github.com/Sysix-Coding/asd_news/issues">https://github.com/Sysix-Coding/asd_news/issues</a>');
-
 /**
  * MetaForm Addon
  * @author markus[dot]staab[at]redaxo[dot]de Markus Staab
@@ -75,8 +72,31 @@ if ($func == '') {
 }
 //------------------------------> Formular
 elseif ($func == 'edit' || $func == 'add') {
+
     echo '<script src="../' . $REX['MEDIA_ADDON_DIR'] . '/metainfo/metainfo.js" type="text/javascript"></script>';
     $form = new rex_asd_a62_tableExpander($prefix, $metaTable, $REX['TABLE_PREFIX'] . '62_params', $I18N->msg('minfo_field_fieldset'), 'field_id=' . $field_id);
+
+    /** @var rex_form_control_element $controlElement */
+
+    if (($controlElement = $form->getControlElement()) !== null) {
+        if ($controlElement->saved() ||$controlElement->applied()) {
+            $fieldset = str_replace('_save', '', $controlElement->saveElement->attributes['name']);
+            $formPosts = rex_post($fieldset);
+
+            $sqlColumn = $formPosts['asd_news_sql_column'];
+            $name = 'asd_' . $formPosts['name'];
+
+            if($sqlColumn) {
+
+                $REX['ADDON']['asd_news']['config']['sql'][$sqlColumn] = $name;
+                file_put_contents(
+                    $REX['ADDON']['asd_news']['configFile'],
+                    json_encode($REX['ADDON']['asd_news']['config'])
+                );
+
+            }
+        }
+    }
 
     if ($func == 'edit') {
         $form->addParam('field_id', $field_id);

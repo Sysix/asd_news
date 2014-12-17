@@ -200,7 +200,7 @@ if ($func == 'add' || $func == 'edit') {
 
     $title = ($func == 'add') ? $I18N->msg('add') : $I18N->msg('edit');
 
-    $form = new rex_news_form($REX['TABLE_PREFIX'] . 'asd_news', ucfirst($title), 'id=' . $id . ' AND clang = ' . $clang);
+    $form = new rex_news_form($REX['TABLE_PREFIX'] . 'asd_news', ucfirst($title), 'id=' . $id . ' AND clang = ' . $clang, 'post', true);
 
     $field = $form->addTextField('title');
     $field->setLabel($I18N->msg('asd_news_title'));
@@ -230,12 +230,14 @@ if ($func == 'add' || $func == 'edit') {
         rex_register_extension('REX_FORM_SAVED', function ($subject) use ($clang, $REX, $id) {
 
             $sql = $subject['sql'];
+            /** @var rex_news_form $form */
             $form = $subject['form'];
 
             $lang = new rex_sql();
             $lang->setQuery('SELECT `id` FROM `' . $REX['TABLE_PREFIX'] . 'clang` WHERE `id` != ' . $clang);
             for ($i = 1; $i <= $lang->getRows(); $i++) {
 
+                // TODO: Metafelder werden nicht mitgespeichert
                 $sql->setTable($form->getTableName());
                 $sql->setValues($form->getValues());
                 $sql->setValue('clang', (int)$lang->getValue('id'));

@@ -1,5 +1,6 @@
 asd_news = ASD News
 asd_news_news = Neuigkeiten
+asd_news_metainfo = SQL Felder
 asd_news_status_saved = Status erfolgreich geändert
 asd_news_deleted = News erfolgreich gelöscht
 asd_news_title = Titel
@@ -35,11 +36,19 @@ asd_news_site_numbers = Seitenanzahl
 asd_news_prev_next_buttons = Vor/Zurück Buttons
 asd_news_admin_perm_need = Sie besitzen nicht alle Rechte um das Addon voll nutzen zu können.
 
+asd_news_column_label = Definierte SQL Spalte
+asd_news_column_none = Kein Wert
+asd_news_column_category = Kategorie
+asd_news_column_picture = Bild
+
 asd_news_faq = F.A.Q
 asd_news_faq_question_1 = Funktioniert das Addon mit dem <code>url_control</code> Plugin?
 asd_news_faq_answer_1 = Ja es funktioniert, es müssen nur folgende Einstellungen gemacht werden:<br /><img src="../{0}/asd_news/help_url_control_settings.png" style="max-width: 100%;">
 
 asd_news_faq_question_2 = Warum sehe ich keine Einstellungen mehr?
 asd_news_faq_answer_2 = Sie brauchen dafür die entsprechenden Benutzerrechte.
+
+asd_news_faq_question_3 = Kann ich weitere Felder, wie z.B. Vorschautext oder eine Galerie, einfügen?
+asd_news_faq_answer_3 = Ja! Dazu gehen Sie einfach auf <a href=index.php?page=asd_news&amp;subpage=metainfo">SQL Felder</a> und fügen wie beim Metainfo-AddOn die entsprechenden Felder ein. Man brauchst dafür die ensprechende Rechte.
 
 submit = abschicken
