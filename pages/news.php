@@ -6,7 +6,14 @@ $clang = rex_request('clang', 'int', 0);
 
 $now = new DateTime();
 
-rex_asd_news_language($clang, '');
+$urlParam = '&amp;subpage=' . $subpage;
+if($func) {
+    $urlParam .= '&amp;func=' . $func;
+}
+if($id) {
+    $urlParam .= '&amp;id=' . $id;
+}
+rex_asd_news_language($clang, $urlParam);
 
 if ($func == 'status') {
 
@@ -154,7 +161,7 @@ if ($func == '') {
     <script>
     jQuery(document).ready(function($) {
 
-        $(".datepicker").click(function() {
+        $(".datepicker").css("cursor", "pointer").click(function() {
             id = $(this).data("id");
             obj = $("#news_" + id);
             clang = obj.data("clang");
@@ -200,7 +207,7 @@ if ($func == 'add' || $func == 'edit') {
 
     $title = ($func == 'add') ? $I18N->msg('add') : $I18N->msg('edit');
 
-    $form = new rex_news_form($REX['TABLE_PREFIX'] . 'asd_news', ucfirst($title), 'id=' . $id . ' AND clang = ' . $clang, 'post', true);
+    $form = new rex_news_form($REX['TABLE_PREFIX'] . 'asd_news', ucfirst($title), 'id=' . $id . ' AND clang = ' . $clang, 'post');
 
     $field = $form->addTextField('title');
     $field->setLabel($I18N->msg('asd_news_title'));
@@ -240,6 +247,9 @@ if ($func == 'add' || $func == 'edit') {
                 // TODO: Metafelder werden nicht mitgespeichert
                 $sql->setTable($form->getTableName());
                 $sql->setValues($form->getValues());
+                if(OOAddon::isAvailable('metainfo')) {
+                    $sql->setValues($form->getMetaValues());
+                }
                 $sql->setValue('clang', (int)$lang->getValue('id'));
                 $sql->setValue('id', $id);
                 $sql->insert();
