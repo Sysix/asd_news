@@ -19,6 +19,7 @@ Update 1.4.0 - DEV
 * `$news->replaceSeoTags()` utf-8 Bugfix
 * Felder werden nun über das Addon `metainfo` verwaltet
 * Benutzerrecht `asd_news[metainfo]` hinzugefügt
+* Unter Einstellungen: News Artikel auswählbar
 * F.A.Q. Eintrag "Warum sehe ich keine Einstellungen mehr?" hinzugefügt
 * F.A.Q. Eintrag "Kann ich weitere Felder, wie z.B. Vorschautext oder eine Galerie, einfügen?" hinzugefügt
 * Extension `ASD_NEWS_GETIMAGE` hinzugefügt

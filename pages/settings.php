@@ -10,7 +10,8 @@ if (!$REX['USER']->hasPerm('asd_news[settings]') && !$REX['USER']->isAdmin()) {
 define('ASD_NEWS_MODUL_1', 'ASD News - Kategorieauswahl');
 define('ASD_NEWS_MODUL_2', 'ASD News - Archiv');
 define('ASD_NEWS_MODUL_3', 'ASD News - Alle News');
-
+OOCategory::getRootCategories();
+OOArticle::getRootArticles();
 $func = rex_request('func', 'string');
 
 $config = $REX['ADDON']['asd_news']['config'];
@@ -66,16 +67,21 @@ if ($func == 'update') {
 
     if ($sendit) {
 
-        $config = array_merge($config, $saves);
+        $newConfig = array_merge($config, $saves);
 
-        if (file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($config))) {
+        if (file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($newConfig))) {
             echo rex_info($I18N->msg('asd_news_settings_saved'));
             if (rex_asd_news::$SEO_URL_CONTROL) {
+                if($config['article'] != $newConfig['article']) {
+                    echo rex_info('URL-Control Einstellungen müsen noch geändert werden. <a href="#">Jetzt automatisch ändern</a>');
+                }
                 url_generate::generatePathFile('');
             }
         } else {
             echo rex_warning($I18N->msg('asd_news_settings_not_saved'));
         }
+
+        $config = $newConfig;
     }
 
     if ($installModul_1 || $installModul_2 || $installModul_3) {
@@ -115,7 +121,6 @@ if ($func == 'update') {
     }
 
     $func = '';
-
 }
 
 $sql = new rex_sql();
@@ -129,6 +134,7 @@ $disabledModul_2 = ($sql->getRows()) ? ' disabled="disabled"' : '';
 $sql = new rex_sql();
 $sql->setQuery('SELECT id FROM `' . $REX['TABLE_PREFIX'] . 'module` WHERE `name` = "' . ASD_NEWS_MODUL_3 . '"');
 $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
+
 
 ?>
 <style>
