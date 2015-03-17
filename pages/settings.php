@@ -43,7 +43,8 @@ if ($func == 'update') {
         'published-lang' => 'string',
         'pagination' => 'string',
         'pagination-css-id' => 'string',
-        'pager-css-id' => 'string'
+        'pager-css-id' => 'string',
+        'article' => 'int'
     ));
 
     if ($saves['max-per-page'] < 1 || $saves['max-per-page'] > 50) {
@@ -67,12 +68,12 @@ if ($func == 'update') {
 
         $config = array_merge($config, $saves);
 
-        if (file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($saves))) {
+        if (file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($config))) {
             echo rex_info($I18N->msg('asd_news_settings_saved'));
+            url_generate::generatePathFile('');
         } else {
             echo rex_warning($I18N->msg('asd_news_settings_not_saved'));
         }
-
     }
 
     if ($installModul_1 || $installModul_2 || $installModul_3) {
@@ -189,6 +190,13 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                             </select>
                         </p>
                     </div>
+
+                    <div class="rex-form-row">
+                        <div class="rex-form-widget">
+                            <label>News Artikel</label>
+                            <?php echo rex_var_link::_getLinkButton('article', 1, $config['article']); ?>
+                        </div>
+                    </div>
                 </div>
                 <fieldset class="rex-form-col-1">
                     <legend><?php echo $I18N->msg('asd_news_settings_published_by'); ?></legend>
@@ -273,6 +281,7 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                         </div>
                     </div>
                 </fieldset>
+
         </form>
     </div>
 </div>

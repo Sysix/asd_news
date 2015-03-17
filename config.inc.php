@@ -49,7 +49,7 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
 
     $REX['ADDON']['pages']['asd_news'] = array($news, $rubric, $faq, $settings);
 
-    if(OOAddon::isAvailable('metainfo')) {
+    if (OOAddon::isAvailable('metainfo')) {
         $meta = new rex_be_page($I18N->msg('asd_news_metainfo'), array(
             'page' => 'asd_news',
             'subpage' => 'metainfo'
@@ -88,6 +88,13 @@ foreach (array('rexseo', 'yrewrite', 'seo42') as $seoAddon) {
 if (!is_null(rex_asd_news::$SEO_ADDON)) {
     rex_asd_news::$SEO_URL_CONTROL = OOPlugin::isAvailable(rex_asd_news::$SEO_ADDON, 'url_control');
 }
+
+// "rewrite" article id with the backend id
+rex_register_extension('ASD_NEWS_GENERATE_URL', function ($params) {
+    global $REX;
+    $params['subject']['article-id'] = $REX['ADDON']['asd_news']['config']['article'];
+    return $params;
+});
 
 // SEO Sitemap.xml
 /*

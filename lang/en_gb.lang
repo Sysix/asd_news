@@ -27,6 +27,7 @@ asd_news_settings_published_by = publishing news for
 asd_news_settings_saved = The settings have been successfully saved
 asd_news_settings_not_saved = An error as occurred: settings could not be saved
 
+asd_news_no_article_selected = You have not selected a article which is responsible for the news.
 asd_news_current_lang = selected language
 asd_news_all_lang = all languages
 asd_news_install_modul = install modul "{0}"
@@ -49,6 +50,6 @@ asd_news_faq_question_2 = Why do not I see more settings?
 asd_news_faq_answer_2 = All you need is the appropriate user rights.
 
 asd_news_faq_question_3 = Can I add more fiels such as preview-text or a gallery?
-asd_news_faq_answer_3 = Yes! Go to <a href=index.php?page=asd_news&amp;subpage=metainfo">SQL fields</a> and add the appropriate fields as in metainfo-AddOn. You need the appropriate rights for it.
+asd_news_faq_answer_3 = Yes! Go to <a href="index.php?page=asd_news&amp;subpage=metainfo">SQL fields</a> and add the appropriate fields as in metainfo-AddOn. You need the appropriate rights for it.
 
 submit = submit

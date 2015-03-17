@@ -169,8 +169,6 @@ class rex_asd_pager extends rex_pager
                 $class = ' class="disabled"';
             }
             $return[] = '<li' . $class . '><a href="' . $href . '">»</a></li>';
-
-            $return[] = '</ul>';
         }
 
         if ($REX['ADDON']['asd_news']['config']['pagination'] == 'pager') {
@@ -189,10 +187,9 @@ class rex_asd_pager extends rex_pager
             if ($this->getCurrentPage() != $this->getNextPage()) {
                 $return[] = '<li class="next"><a href="' . rex_getUrl('', '', array($this->getCursorName() => $this->getNextPage())) . '">next</a></li>';
             }
-
-            $return[] = '<ul>';
-
         }
+
+        $return[] = '</ul>';
 
         return implode(PHP_EOL, $return);
     }

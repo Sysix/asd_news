@@ -19,6 +19,7 @@ $defaults = array(
     'min-archive' => 15,
     'publish-lang' => 'single',
     'pagination' => 'pager',
+    'article' => null,
     'pagination-css-id' => 'asd-pagination',
     'pager-css-id' => 'asd-pager',
     'sql' => array(

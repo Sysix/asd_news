@@ -15,6 +15,10 @@ if(!$subpage) {
 $BaseDir = 'index.php?page='.$page.'&amp;subpage='.$subpage;
 $baseDirFunc = $BaseDir.'&amp;func='.$func;
 
+if(!isset($REX['ADDON']['asd_news']['config']['article']) || !$REX['ADDON']['asd_news']['config']['article']) {
+    echo rex_warning($I18N->msg('asd_news_no_article_selected'));
+}
+
 switch($subpage) {
     case 'news':
     case 'rubric':

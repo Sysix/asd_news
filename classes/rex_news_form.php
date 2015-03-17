@@ -1,18 +1,23 @@
 <?php
 
-class rex_news_form extends rex_form {
+class rex_news_form extends rex_form
+{
 
     /** @var rex_sql $sqlFields */
     public $sqlFields;
     /** @var rex_sql $sql */
     public $sql;
 
-    public function __construct($tableName, $fieldset, $whereCondition, $method = 'post', $debug = false) {
+    /** @var array $langOverSaved Felder für die Sprachübergreifenden Felder */
+    public $langOverSaved = array();
+
+    public function __construct($tableName, $fieldset, $whereCondition, $method = 'post', $debug = false)
+    {
         global $REX;
 
         parent::rex_form($tableName, $fieldset, $whereCondition, $method, $debug);
 
-        if(OOAddon::isAvailable('metainfo')) {
+        if (OOAddon::isAvailable('metainfo')) {
             require_once rex_path::addon('metainfo', 'extensions/extension_art_metainfo.inc.php');
 
             $category = $REX['ADDON']['asd_news']['config']['sql']['category'];
@@ -23,9 +28,38 @@ class rex_news_form extends rex_form {
         }
     }
 
-    public function preSave($fieldsetName, $fieldName, $fieldValue, &$saveSql) {
+    /**
+     * set the values for the other lang
+     * @param $args,...
+     * @return $this
+     */
+    public function setOverSavedFields($args)
+    {
+        $args = func_get_args();
+        $this->langOverSaved = $args;
 
-        if(OOAddon::isAvailable('metainfo')) {
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOverSavedFields()
+    {
+        return $this->langOverSaved;
+    }
+
+
+    /**
+     * @param string $fieldsetName
+     * @param string $fieldName
+     * @param string $fieldValue
+     * @param rex_sql $saveSql
+     * @return mixed
+     */
+    public function preSave($fieldsetName, $fieldName, $fieldValue, &$saveSql)
+    {
+        if (OOAddon::isAvailable('metainfo')) {
             $params = array();
             $this->sqlFields->reset();
             _rex_a62_metainfo_handleSave($params, $saveSql, $this->sqlFields);
@@ -34,13 +68,21 @@ class rex_news_form extends rex_form {
         return parent::preSave($fieldsetName, $fieldName, $fieldValue, $saveSql);
     }
 
-    public function getMetainfoExtension() {
+    /**
+     * @return string
+     */
+    public function getMetainfoExtension()
+    {
         $this->sql->setValues($this->getMetaValues());
-        return rex_a62_metaFields($this->sqlFields, $this->sql, 'rex_a62_metainfo_form_item', array());
+        return rex_a62_metaFields($this->sqlFields, $this, 'rex_a62_metainfo_form_item', array());
     }
 
-    public function getValue($name) {
-
+    /**
+     * @param $name
+     * @return array|null|string
+     */
+    public function getValue($name)
+    {
         $value = null;
 
         $postValue = $this->elementPostValue($this->getFieldsetName(), $name);
@@ -61,8 +103,11 @@ class rex_news_form extends rex_form {
 
     }
 
-    public function getValues() {
-
+    /**
+     * @return array
+     */
+    public function getValues()
+    {
         $values = array();
         foreach ($this->elements as $fieldsetName => $fieldsetElementsArray) {
             foreach ($fieldsetElementsArray as $key => $element) {
@@ -82,13 +127,65 @@ class rex_news_form extends rex_form {
         return $values;
     }
 
+    /**
+     * @param rex_news_form $form
+     * @param $id
+     * @param $clang
+     */
+    public static function saveOverLangValues(rex_news_form $form, $id, $clang)
+    {
+        global $REX;
+
+        $lang = new rex_sql();
+        $lang->setQuery('SELECT `id` FROM `' . $REX['TABLE_PREFIX'] . 'clang` WHERE `id` != ' . $clang);
+        for ($i = 1; $i <= $lang->getRows(); $i++) {
+
+            $sql = new rex_sql();
+
+            $sql->setTable($form->getTableName());
+            $sql->setDebug(true);
+            $sql->setWhere('`id` = ' . $id . ' AND `clang` = ' . $lang->getValue('id'));
+
+            $sql->select('id');
+
+            $sql->setTable($form->getTableName());
+            $sql->setDebug(true);
+            $sql->setWhere('`id` = ' . $id . ' AND `clang` = ' . $lang->getValue('id'));
+
+            if(OOAddon::isAvailable('metainfo')) {
+                $sql->setValues($form->getMetaValues());
+            }
+
+            if($sql->getRows()) {
+                $sql->setValues(array_intersect_key(
+                    $form->getValues(),
+                    array_flip($form->getOverSavedFields())
+                ));
+
+                $sql->setValue('clang', $lang->getValue('id'));
+                $sql->setValue('id', $id);
+                $sql->update();
+            } else {
+                $sql->setValues($form->getValues());
+
+                $sql->setValue('clang', $lang->getValue('id'));
+                $sql->setValue('id', $id);
+                $sql->insert();
+            }
+
+            $lang->next();
+        }
+
+    }
+
 
     /**
      * return array with the meta name & values
      * it test if the form is posted or not and add the necessary values
      * @return array
      */
-    public function getMetaValues() {
+    public function getMetaValues()
+    {
         global $REX;
 
         $returnArray = array();
@@ -118,23 +215,21 @@ class rex_news_form extends rex_form {
             // handle date types with timestamps
             if (isset($postValue['year']) && isset($postValue['month']) && isset($postValue['day']) && isset($postValue['hour']) && isset($postValue['minute'])) {
                 if (isset($postValue['active'])) {
-                    $saveValue = mktime((int) $postValue['hour'], (int) $postValue['minute'], 0, (int) $postValue['month'], (int) $postValue['day'], (int) $postValue['year']);
+                    $saveValue = mktime((int)$postValue['hour'], (int)$postValue['minute'], 0, (int)$postValue['month'], (int)$postValue['day'], (int)$postValue['year']);
                 } else {
                     $saveValue = 0;
                 }
-            }
-            // handle date types without timestamps
+            } // handle date types without timestamps
             elseif (isset($postValue['year']) && isset($postValue['month']) && isset($postValue['day'])) {
                 if (isset($postValue['active'])) {
-                    $saveValue = mktime(0, 0, 0, (int) $postValue['month'], (int) $postValue['day'], (int) $postValue['year']);
+                    $saveValue = mktime(0, 0, 0, (int)$postValue['month'], (int)$postValue['day'], (int)$postValue['year']);
                 } else {
                     $saveValue = 0;
                 }
-            }
-            // handle time types
+            } // handle time types
             elseif (isset($postValue['hour']) && isset($postValue['minute'])) {
                 if (isset($postValue['active'])) {
-                    $saveValue = mktime((int) $postValue['hour'], (int) $postValue['minute'], 0, 0, 0, 0);
+                    $saveValue = mktime((int)$postValue['hour'], (int)$postValue['minute'], 0, 0, 0, 0);
                 } else {
                     $saveValue = 0;
                 }
@@ -158,7 +253,7 @@ class rex_news_form extends rex_form {
             }
 
             // Wert in SQL zum speichern
-            $returnArray[$fieldName] =  $saveValue;
+            $returnArray[$fieldName] = $saveValue;
         }
 
         return $returnArray;

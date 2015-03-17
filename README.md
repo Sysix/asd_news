@@ -18,7 +18,6 @@ Update 1.4.0
 ------------
 * `$news->replaceSeoTags()` utf-8 Bugfix
 * Felder werden nun über das Addon `metainfo` verwaltet
-* Benutzerrecht `asd_news[faq]` entfernt
 * Benutzerrecht `asd_news[metainfo]` hinzugefügt
 * F.A.Q. Eintrag "Warum sehe ich keine Einstellungen mehr?" hinzugefügt
 * F.A.Q. Eintrag "Kann ich weitere Felder, wie z.B. Vorschautext oder eine Galerie, einfügen?" hinzugefügt
