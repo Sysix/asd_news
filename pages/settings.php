@@ -10,8 +10,7 @@ if (!$REX['USER']->hasPerm('asd_news[settings]') && !$REX['USER']->isAdmin()) {
 define('ASD_NEWS_MODUL_1', 'ASD News - Kategorieauswahl');
 define('ASD_NEWS_MODUL_2', 'ASD News - Archiv');
 define('ASD_NEWS_MODUL_3', 'ASD News - Alle News');
-OOCategory::getRootCategories();
-OOArticle::getRootArticles();
+
 $func = rex_request('func', 'string');
 
 $config = $REX['ADDON']['asd_news']['config'];
