@@ -14,7 +14,7 @@ Features
 * News ab einer bestimmten Anzahl zu archivieren
 * fertige Module via Knopfdruck installieren
 
-Update 1.4.0
+Update 1.4.0 - DEV
 ------------
 * `$news->replaceSeoTags()` utf-8 Bugfix
 * Felder werden nun über das Addon `metainfo` verwaltet
@@ -24,7 +24,7 @@ Update 1.4.0
 * Extension `ASD_NEWS_GETIMAGE` hinzugefügt
 * Code aufgeräumt
 
-Update 1.3.0
+Update 1.3.0 - 31.10.14
 ------------
 * CKEditor Support
 * Admin's müssen jetzt die benötigten Rechte besitzen
@@ -37,7 +37,7 @@ Update 1.3.0
 * Bugfix: offline News veröffentlichen
 * Bugfix: Aktiv Style bei Navigation
 
-Update 1.2.0
+Update 1.2.0 - 26.09.14
 ------------
 * Unter Einstellungen => ab welcher Newsanzahl die News in das Archiv landen
 * Modul "ASD News - Archiv" hinzugefügt
@@ -52,7 +52,7 @@ Update 1.2.0
 * Bugfix "call unstatic method`getDefaultWhere` & `generateWhere` static"
 
 
-Update 1.1.0
+Update 1.1.0 - 25.09.14
 ------------
 * Methode `$news->isOnline()` hinzugefügt
 * Neuste News zuerst
@@ -63,6 +63,9 @@ Update 1.1.0
 * Where Condition flexibler gestaltet
 * Erfolgsmeldung beim speichern der Einstellungen
 
+
+Version 1.0.0 - 23.09.14
+-------------
 
 PHP Methoden
 ------------
@@ -98,7 +101,7 @@ PHP Methoden
 ```$date = $news->getPublishDate();```
 
 * Überprüfen ob News online
-```if($news->isOnline())```
+``` $news->isOnline()) ```
 
 * Monatname bekommen
 ```$monthName = $news->getMonthName($lang = '_de');```
