@@ -70,7 +70,9 @@ if ($func == 'update') {
 
         if (file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($config))) {
             echo rex_info($I18N->msg('asd_news_settings_saved'));
-            url_generate::generatePathFile('');
+            if (rex_asd_news::$SEO_URL_CONTROL) {
+                url_generate::generatePathFile('');
+            }
         } else {
             echo rex_warning($I18N->msg('asd_news_settings_not_saved'));
         }
