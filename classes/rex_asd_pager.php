@@ -13,14 +13,10 @@ class rex_asd_pager extends rex_pager
 
     public function __construct($rowsPerPage = 30, $cursorName = 'page')
     {
-        global $REX;
-
         parent::__construct($rowsPerPage, $cursorName);
 
         $this->cursorName = $cursorName;
-        $this->rowsPerPage = $REX['ADDON']['asd_news']['config']['max-per-page'];
-
-
+        $this->rowsPerPage = rex_asd_news_config::getConfig('max-per-page');
     }
 
     /**
@@ -29,10 +25,8 @@ class rex_asd_pager extends rex_pager
      */
     function setRowsCount($count)
     {
-        global $REX;
-
-        if ($REX['ADDON']['asd_news']['config']['min-archive'] < $count) {
-            $count = $REX['ADDON']['asd_news']['config']['min-archive'];
+        if (rex_asd_news_config::getConfig('min-archive') < $count) {
+            $count = rex_asd_news_config::getConfig('min-archive');
         }
 
         $this->rowCount = $count;
@@ -125,19 +119,17 @@ class rex_asd_pager extends rex_pager
      */
     public function getButtons()
     {
-        global $REX;
-
         $return = array();
 
         if ($this->getPageCount() <= 1) {
             return '';
         }
 
-        if ($REX['ADDON']['asd_news']['config']['pagination'] == 'site-number') {
+        if (rex_asd_news_config::getConfig('pagination') == 'site-number') {
 
             $id = '';
-            if ($REX['ADDON']['asd_news']['config']['pagination-css-id'] != '') {
-                $id = ' id="' . $REX['ADDON']['asd_news']['config']['pagination-css-id'] . '"';
+            if (rex_asd_news_config::getConfig('pagination-css-id') != '') {
+                $id = ' id="' . rex_asd_news_config::getConfig('pagination-css-id') . '"';
             }
 
             $return[] = '<ul class="pagination"' . $id . '>';
@@ -171,11 +163,11 @@ class rex_asd_pager extends rex_pager
             $return[] = '<li' . $class . '><a href="' . $href . '">»</a></li>';
         }
 
-        if ($REX['ADDON']['asd_news']['config']['pagination'] == 'pager') {
+        if (rex_asd_news_config::getConfig('pagination') == 'pager') {
 
             $id = '';
-            if ($REX['ADDON']['asd_news']['config']['pager-css-id'] != '') {
-                $id = ' id="' . $REX['ADDON']['asd_news']['config']['pager-css-id'] . '"';
+            if (rex_asd_news_config::getConfig('pager-css-id') != '') {
+                $id = ' id="' . rex_asd_news_config::getConfig('pager-css-id') . '"';
             }
 
             $return[] = '<ul class="pager"' . $id . '>';
@@ -194,5 +186,3 @@ class rex_asd_pager extends rex_pager
         return implode(PHP_EOL, $return);
     }
 }
-
-?>

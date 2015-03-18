@@ -2,40 +2,27 @@
 
 global $REX;
 
-$REX['ADDON']['update']['asd_news'] = 1;
-$REX['ADDON']['updatemsg']['asd_news'] = '';
-
-if (!file_exists(rex_path::addonData('asd_news', 'config.json'))) {
-    rex_dir::copy(
-        rex_path::addon('asd_news', 'data'),
-        rex_path::addonData('asd_news')
-    );
-}
-
-$configFile = rex_path::addonData('asd_news', 'config.json');
-$config = json_decode(file_get_contents($configFile), true);
-
-$defaults = array(
-    'min-archive' => 15,
-    'publish-lang' => 'single',
-    'pagination' => 'pager',
-    'article' => null,
-    'pagination-css-id' => 'asd-pagination',
-    'pager-css-id' => 'asd-pager',
-    'sql' => array(
-        'category' => 'asd_category',
-        'picture' => 'asd_picture'
-    )
+include_once rex_path::addon('asd_news', 'classes/rex_asd_news_config.php');
+rex_asd_news_config::init(
+    'asd_news',
+    'asd_news', // Without Prefix
+    'asd_news_category' // Without Prefix
 );
 
-$config = array_merge($defaults, $config);
-file_put_contents($configFile, json_encode($config));
+$REX['ADDON']['update'][rex_asd_news_config::getName()] = 1;
+$REX['ADDON']['updatemsg'][rex_asd_news_config::getName()] = '';
+
+// Check if in AddonData the config file exists
+rex_asd_news_config::createDataConfigIfNotExists();
+
+// Update Config
+rex_asd_news_config::saveConfig();
 
 // Update 1.4
 
 // check if old fields exists
 $sql = new rex_sql();
-$rows = $sql->showColumns($REX['TABLE_PREFIX'] . 'asd_news');
+$rows = $sql->showColumns(rex_asd_news_config::getTable());
 $metaCols = false;
 foreach ($rows as $row) {
     if ($row['name'] == 'category') {
@@ -44,23 +31,28 @@ foreach ($rows as $row) {
     }
 }
 
+if(!OOAddon::isAvailable('metainfo')) {
+    $REX['ADDON']['update'][rex_asd_news_config::getName()] = 0;
+    $REX['ADDON']['updatemsg'][rex_asd_news_config::getName()] = 'Metainfo Addon nicht gefunden';
+}
+
 if (OOAddon::isAvailable('metainfo') && $metaCols) {
 
-    include_once rex_path::addon('asd_news', 'classes/metainfo/rex_asd_metainfo_install.php');
+    include_once rex_path::addon(rex_asd_news_config::getName(), 'classes/metainfo/rex_asd_metainfo_install.php');
 
     rex_asd_metainfo_install::setProperty();
     if ($error = rex_asd_metainfo_install::addFields()) {
-        $REX['ADDON']['update']['asd_news'] = 0;
-        $REX['ADDON']['updatemsg']['asd_news'] .= $error;
+        $REX['ADDON']['update'][rex_asd_news_config::getName()] = 0;
+        $REX['ADDON']['updatemsg'][rex_asd_news_config::getName()] .= $error;
     } else {
         // Einträge Übernehmen
-        $sql->setQuery('UPDATE `' . $REX['TABLE_PREFIX'] . 'asd_news` SET
+        $sql->setQuery('UPDATE `' . rex_asd_news_config::getTable() . '` SET
         `asd_category` = `category`,
         `asd_picture` = `picture`,
         `asd_text` = `text`');
 
         // Alte Felder löschen
-        $sql->setQuery('ALTER TABLE `' . $REX['TABLE_PREFIX'] . 'asd_news`
+        $sql->setQuery('ALTER TABLE `' . rex_asd_news_config::getTable() . '`
             DROP `category`,
             DROP `picture`,
             DROP `text`

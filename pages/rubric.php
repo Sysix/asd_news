@@ -6,7 +6,7 @@ $id = rex_request('id', 'int', 0);
 if($func == 'delete') {
 
     $sql = new rex_sql();
-    $sql->setTable($REX['TABLE_PREFIX'] . 'asd_news_category');
+    $sql->setTable(rex_asd_news_config::getTableCategory());
     $sql->setWhere('id='.$id);
 
     if($sql->delete()) {
@@ -20,7 +20,7 @@ if($func == 'delete') {
 
 if($func == '') {
 
-    $list = new rex_list('SELECT * FROM `' . $REX['TABLE_PREFIX'] .'asd_news_category`');
+    $list = new rex_list('SELECT * FROM `' . rex_asd_news_config::getTableCategory() . '`');
 
     $list->addTableColumnGroup(array(40, '*', 80, 80));
 
@@ -47,7 +47,7 @@ if($func == 'add' || $func == 'edit') {
 
     $title = ($func == 'add') ? $I18N->msg('add') : $I18N->msg('edit');
 
-    $form = new rex_form($REX['TABLE_PREFIX'] . 'asd_news_category', ucfirst($title), 'id='.$id);
+    $form = new rex_form(rex_asd_news_config::getTableCategory(), ucfirst($title), 'id='.$id);
 
     $field = $form->addTextField('name');
     $field->setLabel($I18N->msg('name'));

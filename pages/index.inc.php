@@ -1,42 +1,42 @@
 <?php
 
-require rex_path::src('layout'.DIRECTORY_SEPARATOR.'top.php');
+require rex_path::src('layout' . DIRECTORY_SEPARATOR . 'top.php');
 
-rex_title($I18N->msg('asd_news'), $REX['ADDON']['pages']['asd_news']);
+rex_title($I18N->msg('asd_news'), $REX['ADDON']['pages'][rex_asd_news_config::getName()]);
 
 $page = rex_request('page', 'string');
 $subpage = rex_request('subpage', 'string');
 $func = rex_request('func', 'string');
 
-if(!$subpage) {
+if (!$subpage) {
     $subpage = 'news';
 }
 
-$BaseDir = 'index.php?page='.$page.'&amp;subpage='.$subpage;
-$baseDirFunc = $BaseDir.'&amp;func='.$func;
+$BaseDir = rex_asd_news_config::getBaseUrl();
+$baseDirFunc = rex_asd_news_config::getBaseUrl($func);
 
-if(!isset($REX['ADDON']['asd_news']['config']['article']) || !$REX['ADDON']['asd_news']['config']['article']) {
+if (!rex_asd_news_config::getConfig('article')) {
     echo rex_warning($I18N->msg('asd_news_no_article_selected'));
 }
 
-switch($subpage) {
+switch ($subpage) {
     case 'news':
     case 'rubric':
     case 'faq':
-        $path = rex_path::addon('asd_news', 'pages'.DIRECTORY_SEPARATOR.$subpage.'.php');
+        $path = rex_path::addon(rex_asd_news_config::getName(), 'pages' . DIRECTORY_SEPARATOR . $subpage . '.php');
         break;
     case 'settings':
     case 'metainfo':
-        if($REX['USER']->hasPerm('asd_news['.$subpage.']') || $REX['USER']->isAdmin()) {
-            $path = rex_path::addon('asd_news', 'pages' . DIRECTORY_SEPARATOR . $subpage . '.php');
+        if ($REX['USER']->hasPerm(rex_asd_news_config::getName() . '[' . $subpage . ']') || $REX['USER']->isAdmin()) {
+            $path = rex_path::addon(rex_asd_news_config::getName(), 'pages' . DIRECTORY_SEPARATOR . $subpage . '.php');
         }
         break;
     default:
-        $path = rex_path::plugin('asd_news', $subpage, 'pages'.DIRECTORY_SEPARATOR.$subpage.'.php');
+        $path = rex_path::plugin(rex_asd_news_config::getName(), $subpage, 'pages' . DIRECTORY_SEPARATOR . $subpage . '.php');
         break;
 }
 
 require $path;
 
-require rex_path::src('layout'.DIRECTORY_SEPARATOR.'bottom.php');
+require rex_path::src('layout' . DIRECTORY_SEPARATOR . 'bottom.php');
 ?>

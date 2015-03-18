@@ -20,10 +20,10 @@ class rex_asd_news_ajaxHandler
         global $REX, $I18N;
 
         $sql = new rex_sql();
-        $sql->setTable($REX['TABLE_PREFIX'] . 'asd_news');
+        $sql->setTable(rex_asd_news_config::getTable());
         $sql->setWhere('`id` = ' . $id . ' AND `clang` = ' . $clang);
 
-        if ($REX['ADDON']['asd_news']['config']['published-lang'] == 'all') {
+        if (rex_asd_news_config::getConfig('published-lang') == 'all') {
             $sql->setWhere('`id` = ' . $id);
         }
 
@@ -32,7 +32,7 @@ class rex_asd_news_ajaxHandler
         $sql->setValue('status', 1);
         $sql->update();
 
-        $sql->setQuery('SELECT * FROM `' . $REX['TABLE_PREFIX'] . 'asd_news` WHERE `id` = ' . $id . ' AND `clang` = ' . $clang);
+        $sql->setQuery('SELECT * FROM `' . rex_asd_news_config::getTable() . '` WHERE `id` = ' . $id . ' AND `clang` = ' . $clang);
 
         return '
         <td>' . $id . '</td>
@@ -53,7 +53,8 @@ class rex_asd_news_ajaxHandler
      */
     static private function getBaseUrl($clang)
     {
-        return 'index.php?list=232cc606fc1a5fb5cf5badfc8e360ae0&amp;page=asd_news&amp;subpage=news&amp;clang=' . $clang . '&amp;func=';
+        return 'index.php?list=232cc606fc1a5fb5cf5badfc8e360ae0&amp;page=' . rex_asd_news_config::getName()
+        . '&amp;subpage=news&amp;clang=' . $clang . '&amp;func=';
     }
 
 }

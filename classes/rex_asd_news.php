@@ -2,7 +2,15 @@
 
 class rex_asd_news
 {
+    /**
+     * @deprecated $SEO_ADDON
+     * @since v1.4
+     */
     public static $SEO_ADDON = null;
+    /**
+     * @deprecated $SEO_URL_CONTROL
+     * @since v1.4
+     */
     public static $SEO_URL_CONTROL = false;
 
     /**
@@ -70,7 +78,7 @@ class rex_asd_news
         }
 
         $this->setSql(new rex_sql);
-        $this->sql->setQuery('SELECT * FROM `' . $REX['TABLE_PREFIX'] . 'asd_news` WHERE `id` = ' . (int)$id . ' AND `clang` = ' . (int)$clang);
+        $this->sql->setQuery('SELECT * FROM `' . rex_asd_news_config::getTable() . '` WHERE `id` = ' . (int)$id . ' AND `clang` = ' . (int)$clang);
 
         return $this;
     }
@@ -118,9 +126,9 @@ class rex_asd_news
      */
     public function getImage($imageType = null)
     {
-        global $REX;
+        $sqlCols = rex_asd_news_config::getConfig('sql');
+        $pictureCol = $sqlCols['picture'];
 
-        $pictureCol = $REX['ADDON']['asd_news']['config']['sql']['picture'];
         $default = '/files/' . $this->getValue($pictureCol);
         $defaultType = 'index.php?rex_img_type=' . $imageType . '&amp;rex_img_file=' . $this->getValue($pictureCol);
 
@@ -128,7 +136,7 @@ class rex_asd_news
             return rex_register_extension_point('ASD_NEWS_GETIMAGE', $pictureCol);
         }
 
-        if (self::$SEO_ADDON == 'seo42') {
+        if (rex_asd_news_config::getSeoAddon() == 'seo42') {
 
             if ($imageType != null) {
                 return seo42::getImageManagerFile($this->getValue($pictureCol), $imageType);
@@ -179,13 +187,13 @@ class rex_asd_news
         $params = array_merge(array(
             'news-id' => $this->getValue('id'),
             'clang' => $REX['CUR_CLANG'],
-            'article-id' => $REX['ARTICLE_ID']
+            'article-id' => rex_asd_news_config::getConfig('article', $REX['ARTICLE_ID'])
         ), $params);
 
         $params = rex_register_extension_point('ASD_NEWS_GENERATE_URL', $params);
 
-        if (self::$SEO_URL_CONTROL) {
-            return url_generate::getUrlById($REX['TABLE_PREFIX'] . 'asd_news', $this->getValue('id'));
+        if (rex_asd_news_config::isControlPlugin()) {
+            return url_generate::getUrlById(rex_asd_news_config::getTable(), $this->getValue('id'));
         }
 
         $art_id = $params['article-id'];
@@ -204,18 +212,18 @@ class rex_asd_news
         static $rubrics = array();
 
         if(empty($rubrics)) {
-
             $sql = new rex_sql();
-            $sql->setQuery('SELECT * FROM `' . $REX['TABLE_PREFIX'] . 'asd_news_category`');
+            $sql->setQuery('SELECT * FROM `' . rex_asd_news_config::getTableCategory() . '`');
             for($i = 1; $i <= $sql->getRows(); $i++) {
                 $rubrics[$sql->getValue('id')] = $sql->getValue('name');
 
                 $sql->next();
             }
-
         }
 
-        return $rubrics[$this->getValue($REX['ADDON']['asd_news']['config']['sql']['category'])];
+        $sqlCols = rex_asd_news_config::getConfig('sql');
+
+        return $rubrics[$this->getValue($sqlCols['category'])];
 
     }
 
@@ -324,8 +332,8 @@ class rex_asd_news
 
         $id = null;
 
-        if (self::$SEO_URL_CONTROL) {
-            $id = url_generate::getId($REX['TABLE_PREFIX'] . 'asd_news');
+        if (rex_asd_news_config::isControlPlugin()) {
+            $id = url_generate::getId(rex_asd_news_config::getTable());
         }
 
         if ($id == null) {
@@ -344,10 +352,10 @@ class rex_asd_news
      */
     public static function getNewsByCategory($cat, $clang = null)
     {
-        global $REX;
+        $sqlCols = rex_asd_news_config::getConfig('sql');
 
         return self::getByWhere(array(
-            $REX['ADDON']['asd_news']['config']['sql']['category'] => '= ' . (int)$cat
+            $sqlCols['category'] => '= ' . (int)$cat
         ), $clang);
     }
 
@@ -390,7 +398,7 @@ class rex_asd_news
         global $REX;
 
         return self::getByWhere(array(
-            'LIMIT' => $REX['ADDON']['asd_news']['config']['min-archive']
+            'LIMIT' => rex_asd_news_config::getConfig('min-archive')
         ), $clang);
     }
 
@@ -404,7 +412,7 @@ class rex_asd_news
 
         return self::getByWhere(array(
             'LIMIT' => 99999,
-            'OFFSET' => $REX['ADDON']['asd_news']['config']['min-archive']
+            'OFFSET' => rex_asd_news_config::getConfig('min-archive')
         ), $clang);
     }
 
@@ -456,7 +464,7 @@ class rex_asd_news
         $sql = new rex_sql();
         $sql->setQuery('
         SELECT *
-        FROM `' . $REX['TABLE_PREFIX'] . 'asd_news`
+        FROM `' . rex_asd_news_config::getTable() . '`
         ' . $where . '
         ORDER BY `publishedAt` DESC' . $limit . $offset);
 
@@ -525,7 +533,7 @@ class rex_asd_news
         $return = '<select name="' . $name . '">';
 
         $sql = new rex_sql();
-        $sql->setQuery('SELECT * FROM `' . $REX['TABLE_PREFIX'] . 'asd_news_category` ORDER BY `id`');
+        $sql->setQuery('SELECT * FROM `' . rex_asd_news_config::getTableCategory() . '` ORDER BY `id`');
         for ($i = 1; $i <= $sql->getRows(); $i++) {
 
             $selected = ($value == $sql->getValue('id')) ? ' selected="selected"' : '';
@@ -548,7 +556,7 @@ class rex_asd_news
         global $REX;
 
         $sql = new rex_sql();
-        $sql->setQuery('SELECT `id` FROM `' . $REX['TABLE_PREFIX'] . 'asd_news` ORDER BY id DESC LIMIT 0, 1');
+        $sql->setQuery('SELECT `id` FROM `' . rex_asd_news_config::getTable() . '` ORDER BY id DESC LIMIT 0, 1');
 
         if ($sql->getRows()) {
             return (int)$sql->getValue('id');

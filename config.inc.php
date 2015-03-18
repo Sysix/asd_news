@@ -5,96 +5,33 @@
  * @var i18n $I18N
  */
 
-if ($REX['REDAXO'] && is_object($REX['USER'])) {
-    $I18N->appendFile(rex_path::addon('asd_news', 'lang' . DIRECTORY_SEPARATOR));
 
-    // register addon
-    $REX['ADDON']['name']['asd_news'] = $I18N->msg('asd_news');
-    $REX['ADDON']['version']['asd_news'] = '1.4.0 DEV';
-    $REX['ADDON']['author']['asd_news'] = 'ArtStudioDESIGN';
-    $REX['ADDON']['supportpage']['asd_news'] = 'http://redaxo.org/forum/';
-    $REX['ADDON']['perm']['asd_news'] = 'asd_news[]';
+require_once rex_path::addon('asd_news', 'classes/rex_asd_news_config.php');
 
-    // set permission
-    $REX['PERM'][] = 'asd_news[]';
-    $REX['EXTPERM'][] = 'asd_news[settings]';
-    $REX['EXTPERM'][] = 'asd_news[metainfo]';
+rex_asd_news_config::init(
+    'asd_news',
+    'asd_news', // Without Prefix
+    'asd_news_category' // Without Prefix
+);
 
-    //set pages
-    $news = new rex_be_page($I18N->msg('asd_news_news'), array(
-        'page' => 'asd_news',
-        'subpage' => (rex_request('subpage') == 'news') ? rex_request('subpage') : ''
-    ));
-    $news->setHref('index.php?page=asd_news&subpage=news');
+// Abwärtskompatibilität
+$REX['ADDON'][rex_asd_news_config::getName()]['configFile'] = rex_asd_news_config::$configFile;
+$REX['ADDON'][rex_asd_news_config::getName()]['config'] = rex_asd_news_config::$config;
 
-    $rubric = new rex_be_page($I18N->msg('asd_news_rubric'), array(
-        'page' => 'asd_news',
-        'subpage' => 'rubric'
-    ));
-    $rubric->setHref('index.php?page=asd_news&subpage=rubric');
-
-    $faq = new rex_be_page($I18N->msg('asd_news_faq'), array(
-        'page' => 'asd_news',
-        'subpage' => 'faq'
-    ));
-    $faq->setHref('index.php?page=asd_news&subpage=faq');
-
-    $settings = new rex_be_page($I18N->msg('asd_news_settings'), array(
-        'page' => 'asd_news',
-        'subpage' => 'settings'
-    ));
-    $settings->setHref('index.php?page=asd_news&subpage=settings');
-    $settings->setRequiredPermissions(array('asd_news[settings]'));
-
-
-    $REX['ADDON']['pages']['asd_news'] = array($news, $rubric, $faq, $settings);
-
-    if (OOAddon::isAvailable('metainfo')) {
-        $meta = new rex_be_page($I18N->msg('asd_news_metainfo'), array(
-            'page' => 'asd_news',
-            'subpage' => 'metainfo'
-        ));
-        $meta->setHref('index.php?page=asd_news&subpage=metainfo');
-        $meta->setRequiredPermissions(array('asd_news[metainfo]'));
-
-        $REX['ADDON']['pages']['asd_news'][] = $meta;
-
-        // Meta Tables hinzufügen
-        rex_register_extension('PAGE_CHECKED', 'rex_asd_metainfo_install::setProperty');
-    }
-}
-
-
-// set config
-$REX['ADDON']['asd_news']['configFile'] = rex_path::addonData('asd_news', 'config.json');
-$REX['ADDON']['asd_news']['config'] = json_decode(file_get_contents($REX['ADDON']['asd_news']['configFile']), true);
-
-require_once rex_path::addon('asd_news', 'functions/rex_asd_news_language.php');
-require_once rex_path::addon('asd_news', 'functions/asd_news_jquery.php');
-require_once rex_path::addon('asd_news', 'classes/rex_news_form.php');
-require_once rex_path::addon('asd_news', 'classes/rex_asd_news.php');
-require_once rex_path::addon('asd_news', 'classes/rex_asd_news_utils.php');
-require_once rex_path::addon('asd_news', 'classes/rex_asd_pager.php');
-require_once rex_path::addon('asd_news', 'classes/metainfo/rex_asd_metainfo_install.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'functions/rex_asd_news_language.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'functions/asd_news_jquery.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'classes/rex_news_form.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'classes/rex_asd_news.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'classes/rex_asd_news_utils.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'classes/rex_asd_pager.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'classes/metainfo/rex_asd_metainfo_install.php');
 
 // Seo Addon setzen
-foreach (array('rexseo', 'yrewrite', 'seo42') as $seoAddon) {
-    if (OOAddon::isAvailable($seoAddon)) {
-        rex_asd_news::$SEO_ADDON = $seoAddon;
-    }
-}
+rex_asd_news_config::setSeoAddon('rexseo', 'yrewrite', 'seo42');
 
-// url_control Plugin gesetzt?
-if (!is_null(rex_asd_news::$SEO_ADDON)) {
-    rex_asd_news::$SEO_URL_CONTROL = OOPlugin::isAvailable(rex_asd_news::$SEO_ADDON, 'url_control');
+if (rex_asd_news_config::isControlPlugin()) {
+    require_once rex_path::addon('asd_news', 'classes/rex_asd_news_url_control.php');
 }
-
-// "rewrite" article id with the backend id
-rex_register_extension('ASD_NEWS_GENERATE_URL', function ($params) {
-    global $REX;
-    $params['subject']['article-id'] = $REX['ADDON']['asd_news']['config']['article'];
-    return $params;
-});
 
 // SEO Sitemap.xml
 /*
@@ -103,14 +40,69 @@ rex_register_extension('REXSEO_SITEMAP_ARRAY_CREATED', function($params) {
 });
 */
 
-
 if ($REX['REDAXO'] && is_object($REX['USER'])) {
+    $I18N->appendFile(rex_path::addon(rex_asd_news_config::getName(), 'lang' . DIRECTORY_SEPARATOR));
+
+    // register addon
+    $REX['ADDON']['name'][rex_asd_news_config::getName()] = $I18N->msg('asd_news');
+    $REX['ADDON']['version'][rex_asd_news_config::getName()] = '1.4.0 DEV';
+    $REX['ADDON']['author'][rex_asd_news_config::getName()] = 'ArtStudioDESIGN';
+    $REX['ADDON']['supportpage'][rex_asd_news_config::getName()] = 'http://redaxo.org/forum/';
+    $REX['ADDON']['perm'][rex_asd_news_config::getName()] = 'asd_news[]';
+
+    // set permission
+    $REX['PERM'][] = rex_asd_news_config::getName() . '[]';
+    $REX['EXTPERM'][] = rex_asd_news_config::getName() . '[settings]';
+    $REX['EXTPERM'][] = rex_asd_news_config::getName() . '[metainfo]';
+
+    //set pages
+    $news = new rex_be_page($I18N->msg('asd_news_news'), array(
+        'page' => rex_asd_news_config::getName(),
+        'subpage' => (rex_request('subpage') == 'news') ? rex_request('subpage') : ''
+    ));
+    $news->setHref('index.php?page=' . rex_asd_news_config::getName() . '&subpage=news');
+
+    $rubric = new rex_be_page($I18N->msg('asd_news_rubric'), array(
+        'page' => rex_asd_news_config::getName(),
+        'subpage' => 'rubric'
+    ));
+    $rubric->setHref('index.php?page=' . rex_asd_news_config::getName() . '&subpage=rubric');
+
+    $faq = new rex_be_page($I18N->msg('asd_news_faq'), array(
+        'page' => rex_asd_news_config::getName(),
+        'subpage' => 'faq'
+    ));
+    $faq->setHref('index.php?page=' . rex_asd_news_config::getName() . '&subpage=faq');
+
+    $settings = new rex_be_page($I18N->msg('asd_news_settings'), array(
+        'page' => rex_asd_news_config::getName(),
+        'subpage' => 'settings'
+    ));
+    $settings->setHref('index.php?page=' . rex_asd_news_config::getName() . '&subpage=settings');
+    $settings->setRequiredPermissions(array(rex_asd_news_config::getName() . '[settings]'));
+
+
+    $REX['ADDON']['pages'][rex_asd_news_config::getName()] = array($news, $rubric, $faq, $settings);
+
+    if (OOAddon::isAvailable('metainfo')) {
+        $meta = new rex_be_page($I18N->msg('asd_news_metainfo'), array(
+            'page' => rex_asd_news_config::getName(),
+            'subpage' => 'metainfo'
+        ));
+        $meta->setHref('index.php?page=' . rex_asd_news_config::getName() . '&subpage=metainfo');
+        $meta->setRequiredPermissions(array(rex_asd_news_config::getName() . '[metainfo]'));
+
+        $REX['ADDON']['pages'][rex_asd_news_config::getName()][] = $meta;
+
+        // Meta Tables hinzufügen
+        rex_register_extension('PAGE_CHECKED', 'rex_asd_metainfo_install::setProperty');
+    }
 
     $page = rex_request('page');
     $func = rex_request('func');
 
-    if ($page == 'asd_news') {
-        require_once rex_path::addon('asd_news', 'classes/rex_asd_news_ajaxHandler.php');
+    if ($page == rex_asd_news_config::getName()) {
+        require_once rex_path::addon(rex_asd_news_config::getName(), 'classes/rex_asd_news_ajaxHandler.php');
 
         rex_register_extension('PAGE_HEADER', 'asd_news_setjQueryTags');
         // Ajax Publish
@@ -136,13 +128,19 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
     rex_register_extension('OOMEDIA_IS_IN_USE', 'rex_asd_news_utils::isImageInUse');
 
     // autoload Plugins
-    $plugins = OOPlugin::getAvailablePlugins('asd_news');
+    $plugins = OOPlugin::getAvailablePlugins(rex_asd_news_config::getName());
     foreach ($plugins as $name) {
-        if (file_exists(rex_path::plugin('asd_news', $name, 'pages' . DIRECTORY_SEPARATOR . $name))) {
+        if (file_exists(rex_path::plugin(rex_asd_news_config::getName(), $name, 'pages' . DIRECTORY_SEPARATOR . $name))) {
 
-            $I18N->appendFile(rex_path::plugin('asd_news', $name, 'lang' . DIRECTORY_SEPARATOR));
+            $I18N->appendFile(rex_path::plugin(rex_asd_news_config::getName(), $name, 'lang' . DIRECTORY_SEPARATOR));
 
-            array_push($REX['ADDON']['asd_news']['SUBPAGES'], array($name, $I18N->msg('asd_news_' . $name)));
+            array_push(
+                $REX['ADDON'][rex_asd_news_config::getName()]['SUBPAGES'],
+                array(
+                    $name,
+                    $I18N->msg(rex_asd_news_config::getName() . '_' . $name)
+                )
+            );
         }
     }
 

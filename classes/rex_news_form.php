@@ -13,17 +13,15 @@ class rex_news_form extends rex_form
 
     public function __construct($tableName, $fieldset, $whereCondition, $method = 'post', $debug = false)
     {
-        global $REX;
-
         parent::rex_form($tableName, $fieldset, $whereCondition, $method, $debug);
 
         if (OOAddon::isAvailable('metainfo')) {
             require_once rex_path::addon('metainfo', 'extensions/extension_art_metainfo.inc.php');
 
-            $category = $REX['ADDON']['asd_news']['config']['sql']['category'];
+            $sqlCols = rex_asd_news_config::getConfig('sql');
 
             $this->sqlFields = _rex_a62_metainfo_sqlfields('asd_',
-                'AND (`p`.`restrictions` = "" OR p.`restrictions` LIKE "%|' . $this->getValue($category) . '|%") ');
+                'AND (`p`.`restrictions` = "" OR p.`restrictions` LIKE "%|' . $this->getValue($sqlCols['category']) . '|%") ');
 
         }
     }

@@ -18,13 +18,13 @@ rex_asd_news_language($clang, $urlParam);
 if ($func == 'status') {
 
     $sql = new rex_sql();
-    $sql->setTable($REX['TABLE_PREFIX'] . 'asd_news');
+    $sql->setTable(rex_asd_news_config::getTable());
     $sql->setWhere('id=' . $id . ' AND clang = ' . $clang);
     $sql->select('`status`');
 
     $status = ($sql->getValue('status')) ? 0 : 1;
 
-    $sql->setTable($REX['TABLE_PREFIX'] . 'asd_news');
+    $sql->setTable(rex_asd_news_config::getTable());
     $sql->setWhere('id=' . $id . ' AND clang = ' . $clang);
     $sql->setValue('status', $status);
 
@@ -41,7 +41,7 @@ if ($func == 'status') {
 if ($func == 'delete') {
 
     $sql = new rex_sql();
-    $sql->setTable($REX['TABLE_PREFIX'] . 'asd_news');
+    $sql->setTable(rex_asd_news_config::getTable());
     $sql->setWhere('id=' . $id . ' AND clang = ' . $clang);
 
     if ($sql->delete()) {
@@ -57,14 +57,14 @@ if ($func == 'delete') {
 if ($func == 'unpublish') {
 
     $sql = new rex_sql();
-    $sql->setTable($REX['TABLE_PREFIX'] . 'asd_news');
+    $sql->setTable(rex_asd_news_config::getTable());
     $sql->setWhere('id=' . $id . ' AND clang = ' . $clang);
     $sql->setValue('publishedAt', '0000-00-00 00:00:00');
     $sql->setValue('publishedBy', 0);
 
     $successMessage = $I18N->msg('asd_news_unpublished_s');
 
-    if ($REX['ADDON']['asd_news']['config']['published-lang'] == 'all') {
+    if (rex_asd_news_config::getConfig('published-lang') == 'all') {
         $sql->setWhere('`id` = ' . $id);
         $successMessage = $I18N->msg('asd_news_unpublished_m');
     }
@@ -84,7 +84,7 @@ if ($func == '') {
     $list = new rex_list('
     SELECT
       `id`, `title`, `publishedAt`, `status`
-    FROM `' . $REX['TABLE_PREFIX'] . 'asd_news`
+    FROM `' . rex_asd_news_config::getTable() . '`
     WHERE `clang` = ' . $clang . '
     ORDER BY CASE
         WHEN `publishedAt` = "0000-00-00 00:00:00" THEN 1
@@ -199,7 +199,7 @@ if ($func == '') {
 
 if ($func == 'add' || $func == 'edit') {
 
-    if (rex_asd_news::$SEO_URL_CONTROL) {
+    if (rex_asd_news_config::isControlPlugin()) {
         foreach (array('REX_FORM_SAVED', 'REX_FORM_DELETED') as $extension) {
             rex_register_extension($extension, 'url_generate::generatePathFile');
         }
@@ -207,7 +207,7 @@ if ($func == 'add' || $func == 'edit') {
 
     $title = ($func == 'add') ? $I18N->msg('add') : $I18N->msg('edit');
 
-    $form = new rex_news_form($REX['TABLE_PREFIX'] . 'asd_news', ucfirst($title), 'id=' . $id . ' AND clang = ' . $clang, 'post', true);
+    $form = new rex_news_form(rex_asd_news_config::getTable(), ucfirst($title), 'id=' . $id . ' AND clang = ' . $clang, 'post', true);
 
     $field = $form->addTextField('title');
     $field->setLabel($I18N->msg('asd_news_title'));

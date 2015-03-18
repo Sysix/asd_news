@@ -11,6 +11,8 @@ asd_news_really_unpublish = News wirklich unveröffentlichen?
 asd_news_really_delete = News wirklich löschen?
 asd_news_picture = Bild
 asd_news_text = Inhalt
+asd_news_pager = Pager
+asd_news_pagination = Pagination
 asd_news_unpublished_s = News wurde erfolgreich unveröffentlicht
 asd_news_unpublished_m = News wurden erfolgreich unveröffentlicht
 

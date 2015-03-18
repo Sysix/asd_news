@@ -13,13 +13,10 @@ define('ASD_NEWS_MODUL_3', 'ASD News - Alle News');
 
 $func = rex_request('func', 'string');
 
-$config = $REX['ADDON']['asd_news']['config'];
-
 if (!function_exists('asd_filterPosts')) {
 
     function asd_filterPosts(array $names)
     {
-
         $return = array();
         foreach ($names as $key => $cast) {
             $return[$key] = rex_request($key, $cast);
@@ -37,6 +34,7 @@ if ($func == 'update') {
     $installModul_2 = rex_request('modul_2');
     $installModul_3 = rex_request('modul_3');
 
+
     $saves = asd_filterPosts(array(
         'max-per-page' => 'int',
         'min-archive' => 'int',
@@ -46,6 +44,7 @@ if ($func == 'update') {
         'pager-css-id' => 'string',
         'article' => 'int'
     ));
+
 
     if ($saves['max-per-page'] < 1 || $saves['max-per-page'] > 50) {
         $saves['max-per-page'] = 50;
@@ -64,23 +63,18 @@ if ($func == 'update') {
     $saves['pagination-css-id'] = str_replace('#', '', $saves['pagination-css-id']);
     $saves['pager-css-id'] = str_replace('#', '', $saves['pager-css-id']);
 
+    rex_asd_news_config::addSaveConfigs($saves);
+
     if ($sendit) {
-
-        $newConfig = array_merge($config, $saves);
-
-        if (file_put_contents($REX['ADDON']['asd_news']['configFile'], json_encode($newConfig))) {
+        $oldArticle = rex_asd_news_config::getConfig('article');
+        if (rex_asd_news_config::saveConfig()) {
             echo rex_info($I18N->msg('asd_news_settings_saved'));
-            if (rex_asd_news::$SEO_URL_CONTROL) {
-                if($config['article'] != $newConfig['article']) {
-                    echo rex_info('URL-Control Einstellungen müsen noch geändert werden. <a href="#">Jetzt automatisch ändern</a>');
-                }
-                url_generate::generatePathFile('');
+            if (rex_asd_news_config::isControlPlugin() && $oldArticle != $saves['article']) {
+                echo rex_info('URL-Control Einstellungen müsen noch geändert werden. <a href="' . $BaseDir . '&amp;func=update-url-control">Jetzt automatisch ändern</a>');
             }
         } else {
             echo rex_warning($I18N->msg('asd_news_settings_not_saved'));
         }
-
-        $config = $newConfig;
     }
 
     if ($installModul_1 || $installModul_2 || $installModul_3) {
@@ -120,6 +114,14 @@ if ($func == 'update') {
     }
 
     $func = '';
+}
+
+if ($func == 'update-url-control' && rex_asd_news_config::isControlPlugin()) {
+
+    rex_asd_news_url_control::updateArticleId(rex_asd_news_config::getConfig('article'));
+    url_generate::generatePathFile('');
+
+    echo rex_info('URL Control Plugin Einstellungen erfolgreich geändert');
 }
 
 $sql = new rex_sql();
@@ -167,15 +169,15 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                         <p class="rex-form-text">
                             <label><?php echo $I18N->msg('asd_news_settings_max_per_page'); ?></label>
                             <input class="rex-form-text" type="number" name="max-per-page" min="1" max="50"
-                                   value="<?php echo $config['max-per-page'] ?>">
+                                   value="<?php echo rex_asd_news_config::getConfig('max-per-page') ?>">
                         </p>
                     </div>
 
                     <div class="rex-form-row">
                         <p class="rex-form-text">
-                            <label><?php echo $I18N->msg('asd_news_settings_min_archive', $config['min-archive']); ?></label>
+                            <label><?php echo $I18N->msg('asd_news_settings_min_archive', rex_asd_news_config::getConfig('min-archive')); ?></label>
                             <input class="rex-form-text" type="number" name="min-archive" min="5" max="9999"
-                                   value="<?php echo $config['min-archive'] ?>" id="min-archive-input">
+                                   value="<?php echo rex_asd_news_config::getConfig('min-archive') ?>" id="min-archive-input">
                         </p>
                     </div>
 
@@ -189,7 +191,7 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                                              'site-number' => $I18N->msg('asd_news_site_numbers'),
                                              'pager' => $I18N->msg('asd_news_prev_next_buttons')) as $value => $desc) {
 
-                                    $selected = ($value == $config['pagination']) ? ' selected="selected"' : '';
+                                    $selected = ($value == rex_asd_news_config::getConfig('pagination')) ? ' selected="selected"' : '';
                                     echo '<option value="' . $value . '"' . $selected . '>' . $desc . '</option>';
 
                                 }
@@ -201,7 +203,7 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                     <div class="rex-form-row">
                         <div class="rex-form-widget">
                             <label>News Artikel</label>
-                            <?php echo rex_var_link::_getLinkButton('article', 1, $config['article']); ?>
+                            <?php echo rex_var_link::_getLinkButton('article', 1, rex_asd_news_config::getConfig('article')); ?>
                         </div>
                     </div>
                 </div>
@@ -215,7 +217,7 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                                      'all' => $I18N->msg('asd_news_all_lang')
                                  ) as $value => $description) {
 
-                            $checked = ($value == $config['published-lang']) ? ' checked="checked"' : '';
+                            $checked = ($value == rex_asd_news_config::getConfig('published-lang')) ? ' checked="checked"' : '';
 
                             ?>
                             <div class="rex-form-row">
@@ -248,7 +250,7 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                     </div>
                 </fieldset>
                 <fieldset class="rex-form-raw">
-                    <legend></legend>
+                    <legend>erweiterte Optionen</legend>
                     <div class="rex-form-wrapper">
                         <div class="rex-form-row">
                             <span class="js-toggle-button" style="
@@ -257,23 +259,23 @@ $disabledModul_3 = ($sql->getRows()) ? ' disabled="disabled"' : '';
                             "><span class="rex-i-element rex-i-generic-add" style="
                                 display: inline-block;
                                 vertical-align: middle;
-                            "></span> erweiterte Optionen</span>
+                            "></span> CSS ID's</span>
 
                             <div class="js-toggle-content">
 
                                 <div class="rex-form-row">
                                     <p class="rex-form-text">
-                                        <label>Pagination CSS ID</label>
+                                        <label><?php echo $I18N->msg('asd_news_pagination'); ?></label>
                                         <input class="rex-form-text" type="text" name="pagination-css-id"
-                                               value="<?php echo $config['pagination-css-id'] ?>">
+                                               value="<?php echo rex_asd_news_config::getConfig('pagination-css-id') ?>">
                                     </p>
                                 </div>
 
                                 <div class="rex-form-row">
                                     <p class="rex-form-text">
-                                        <label>Pager CSS ID</label>
+                                        <label><?php echo $I18N->msg('asd_news_pager'); ?></label>
                                         <input class="rex-form-text" type="text" name="pager-css-id"
-                                               value="<?php echo $config['pager-css-id'] ?>">
+                                               value="<?php echo rex_asd_news_config::getConfig('pager-css-id') ?>">
                                     </p>
                                 </div>
 

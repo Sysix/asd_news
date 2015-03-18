@@ -1,7 +1,7 @@
 <?php
 
 $prefix = 'asd_';
-$metaTable = $REX['TABLE_PREFIX'] . 'asd_news';
+$metaTable = rex_asd_news_config::getTable();
 
 /**
  * MetaForm Addon
@@ -12,8 +12,8 @@ $metaTable = $REX['TABLE_PREFIX'] . 'asd_news';
  */
 
 require_once rex_path::addon('metainfo', 'classes/class.rex_table_expander.inc.php');
-require_once rex_path::addon('asd_news', 'classes/metainfo/rex_asd_a62_tableExpander.php');
-require_once rex_path::addon('asd_news', 'classes/metainfo/rex_form_asd_restrictions_element.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'classes/metainfo/rex_asd_a62_tableExpander.php');
+require_once rex_path::addon(rex_asd_news_config::getName(), 'classes/metainfo/rex_form_asd_restrictions_element.php');
 
 
 //------------------------------> Parameter
@@ -87,13 +87,8 @@ elseif ($func == 'edit' || $func == 'add') {
             $name = 'asd_' . $formPosts['name'];
 
             if($sqlColumn) {
-
-                $REX['ADDON']['asd_news']['config']['sql'][$sqlColumn] = $name;
-                file_put_contents(
-                    $REX['ADDON']['asd_news']['configFile'],
-                    json_encode($REX['ADDON']['asd_news']['config'])
-                );
-
+                rex_asd_news_config::$config['sql'][$sqlColumn] = $name;
+                rex_asd_news_config::saveConfig();
             }
         }
     }

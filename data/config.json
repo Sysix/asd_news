@@ -1,9 +1,9 @@
 {
     "max-per-page": 5,
-    "published-lang": "single",
+    "min-archive": 15,
     "pagination": "pager",
     "article": null,
-    "min-archive": 15,
+    "published-lang": "single",
     "pagination-css-id": "asd-pagination",
     "pager-css-id": "asd-pager",
     "sql": {

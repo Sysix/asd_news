@@ -43,7 +43,7 @@ class rex_asd_metainfo_install
         }
 
         return self::checkErrorMessage(
-            a62_add_field('translate:content_category', 'asd_category', 2, '', 3, '', 'SELECT `name`, `id` FROM ' . $REX['TABLE_PREFIX'] . 'asd_news_category'),
+            a62_add_field('translate:content_category', 'asd_category', 2, '', 3, '', 'SELECT `name`, `id` FROM ' . rex_asd_news_config::getTableCategory()),
             a62_add_field('translate:asd_news_picture', 'asd_picture', 3, '', 6, ''),
             a62_add_field('translate:asd_news_text', 'asd_text', 4, 'class=' . $class, 2, '')
         );
@@ -87,7 +87,6 @@ class rex_asd_metainfo_install
 
         for($i = 1; $i <= $sql->getRows(); $i++) {
             $delFields[] = a62_delete_field($sql->getValue('name'));
-            var_dump($sql->getValue('name'));
             $sql->next();
         }
 
