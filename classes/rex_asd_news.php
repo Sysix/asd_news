@@ -13,11 +13,6 @@ class rex_asd_news
      */
     public static $SEO_URL_CONTROL = false;
 
-    /**
-     * the old Columns, needed vor getValue()
-     */
-    const oldSQLColumns = '|category|picture|text|';
-
     /** @var  rex_sql $sql */
     public $sql;
 
@@ -34,7 +29,7 @@ class rex_asd_news
     /**
      * initial the class
      * @param mixed $arg1 a sql Object, or int
-     * @param int $arg2
+     * @param int|null $arg2
      */
     public function __construct($arg1, $arg2 = null)
     {
@@ -48,7 +43,6 @@ class rex_asd_news
             $this->setVars($arg1, $arg2);
 
         }
-
     }
 
     /**
@@ -85,11 +79,11 @@ class rex_asd_news
 
     /**
      * @see rex_sql::getValue
-     * @return mixed
+     * @return string
      */
     public function getValue($name, $default = null)
     {
-        if(strpos(self::oldSQLColumns, '|' . $name . '|') !== false) {
+        if (strpos(rex_asd_news_config::OLD_SQL_COLUMNS, '|' . $name . '|') !== false) {
             $name = 'asd_' . $name;
         }
         return $this->sql->getValue($name, $default);
@@ -101,6 +95,16 @@ class rex_asd_news
     public function getPublishDate()
     {
         return new DateTime($this->getValue('publishedAt'));
+    }
+
+    /**
+     * @return string
+     */
+    public function getRubric()
+    {
+        $sqlCols = rex_asd_news_config::getConfig('sql');
+
+        return $this->getValue($sqlCols['category']);
     }
 
     /**
@@ -132,7 +136,7 @@ class rex_asd_news
         $default = '/files/' . $this->getValue($pictureCol);
         $defaultType = 'index.php?rex_img_type=' . $imageType . '&amp;rex_img_file=' . $this->getValue($pictureCol);
 
-        if(rex_extension_is_registered('ASD_NEWS_GETIMAGE')) {
+        if (rex_extension_is_registered('ASD_NEWS_GETIMAGE')) {
             return rex_register_extension_point('ASD_NEWS_GETIMAGE', $pictureCol);
         }
 
@@ -207,24 +211,21 @@ class rex_asd_news
     /**
      * return string
      */
-    public function getRubricName() {
-        global $REX;
+    public function getRubricName()
+    {
         static $rubrics = array();
 
-        if(empty($rubrics)) {
+        if (empty($rubrics)) {
             $sql = new rex_sql();
             $sql->setQuery('SELECT * FROM `' . rex_asd_news_config::getTableCategory() . '`');
-            for($i = 1; $i <= $sql->getRows(); $i++) {
+            for ($i = 1; $i <= $sql->getRows(); $i++) {
                 $rubrics[$sql->getValue('id')] = $sql->getValue('name');
 
                 $sql->next();
             }
         }
 
-        $sqlCols = rex_asd_news_config::getConfig('sql');
-
-        return $rubrics[$this->getValue($sqlCols['category'])];
-
+        return $rubrics[$this->getRubric()];
     }
 
     /**
@@ -311,7 +312,7 @@ class rex_asd_news
                 // get the doctype
                 preg_match('/<!doctype([^>]*)>/i', $subject['subject'], $doctype);
 
-                return $doctype[0]. $document->saveHTML($document->documentElement);
+                return $doctype[0] . $document->saveHTML($document->documentElement);
 
             } catch (DOMException $e) {
                 echo rex_warning($e->getMessage());
@@ -328,8 +329,6 @@ class rex_asd_news
      */
     public static function getNewsId()
     {
-        global $REX;
-
         $id = null;
 
         if (rex_asd_news_config::isControlPlugin()) {
@@ -395,8 +394,6 @@ class rex_asd_news
      */
     public static function getAllNews($clang = null)
     {
-        global $REX;
-
         return self::getByWhere(array(
             'LIMIT' => rex_asd_news_config::getConfig('min-archive')
         ), $clang);
@@ -408,8 +405,6 @@ class rex_asd_news
      */
     public static function getArchiveNews($clang = null)
     {
-        global $REX;
-
         return self::getByWhere(array(
             'LIMIT' => 99999,
             'OFFSET' => rex_asd_news_config::getConfig('min-archive')
@@ -528,8 +523,6 @@ class rex_asd_news
      */
     public static function getCategorySelect($name, $value)
     {
-        global $REX;
-
         $return = '<select name="' . $name . '">';
 
         $sql = new rex_sql();
@@ -553,8 +546,6 @@ class rex_asd_news
      */
     public static function getLastNewsId()
     {
-        global $REX;
-
         $sql = new rex_sql();
         $sql->setQuery('SELECT `id` FROM `' . rex_asd_news_config::getTable() . '` ORDER BY id DESC LIMIT 0, 1');
 

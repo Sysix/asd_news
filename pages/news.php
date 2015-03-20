@@ -207,7 +207,8 @@ if ($func == 'add' || $func == 'edit') {
 
     $title = ($func == 'add') ? $I18N->msg('add') : $I18N->msg('edit');
 
-    $form = new rex_news_form(rex_asd_news_config::getTable(), ucfirst($title), 'id=' . $id . ' AND clang = ' . $clang, 'post', true);
+    $form = new rex_news_form(rex_asd_news_config::getTable(), ucfirst($title), 'id=' . $id . ' AND clang = ' . $clang);
+    $form->divId = 'asd_news-addon-editmode';
 
     $field = $form->addTextField('title');
     $field->setLabel($I18N->msg('asd_news_title'));

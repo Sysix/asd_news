@@ -6,7 +6,7 @@ asd_news_deleted = news successfully deleted
 asd_news_title = title
 asd_news_publishedAt = published on
 asd_news_publish = publish
-asd_news_unpublish = unpublish
+asd_news_unpublish = unpublished
 asd_news_really_unpublish = really unpublish the news?
 asd_news_really_delete = really delete the news?
 asd_news_picture = thumbnail
@@ -28,16 +28,18 @@ asd_news_settings_min_archive = From the <b id="asd_news_min_archive_text">{0}</
 asd_news_settings_published_by = publishing news for
 asd_news_settings_saved = The settings have been successfully saved
 asd_news_settings_not_saved = An error as occurred: settings could not be saved
+asd_news_settings_update_url_control = URL-Control settings may have to be changed. <a href="{0}">Change now automatically</a>
+asd_news_settings_saved_url_control = URL-Control settings successfully saved
 
 asd_news_no_article_selected = You have not selected a article which is responsible for the news.
 asd_news_current_lang = selected language
 asd_news_all_lang = all languages
-asd_news_install_modul = install modul "{0}"
+asd_news_install_modul = install module "{0}"
 asd_news_no_access = You do not have the required rights for this area
-asd_news_modul_added = ASD News modul was added
+asd_news_modul_added = ASD News module was added
 asd_news_site_numbers = page numbers
 asd_news_prev_next_buttons = prev/next Buttons
-asd_news_admin_perm_need = You do not have any rights for the addon to make full use of it.
+asd_news_admin_perm_need = You do not have any rights for the addOn to make full use of it.
 
 asd_news_column_label = defined SQL column
 asd_news_column_none = no value
@@ -45,13 +47,16 @@ asd_news_column_category = category
 asd_news_column_picture = picture
 
 asd_news_faq = F.A.Q
-asd_news_faq_question_1 = Works the addon with the <code>url_control</code> plugin?
+asd_news_faq_question_1 = Works the addOn with the <code>url_control</code> plugin?
 asd_news_faq_answer_1 = Yes it does, it must be made only following settings:<br /><img src="../{0}/asd_news/help_url_control_settings.png" style="max-width: 100%;">
 
 asd_news_faq_question_2 = Why do not I see more settings?
 asd_news_faq_answer_2 = All you need is the appropriate user rights.
 
-asd_news_faq_question_3 = Can I add more fiels such as preview-text or a gallery?
-asd_news_faq_answer_3 = Yes! Go to <a href="index.php?page=asd_news&amp;subpage=metainfo">SQL fields</a> and add the appropriate fields as in metainfo-AddOn. You need the appropriate rights for it.
+asd_news_faq_question_3 = Can I add more fields such as preview-text or a gallery?
+asd_news_faq_answer_3 = Yes! Go to <a href="{0}">SQL fields</a> and add the appropriate fields as in metainfo-AddOn. You need the appropriate rights for it.
+
+asd_news_faq_question_4 = I do not see categories / images anymore. What can I do about it?
+asd_news_faq_answer_4 = Please make sure you have you used the appropriate methods. The error still appears, check "<a href="{0}">SQL fields</a>" if the corresponding columns have also been assigned correctly.
 
 submit = submit

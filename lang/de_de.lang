@@ -28,6 +28,8 @@ asd_news_settings_min_archive = Ab der <b id="asd_news_min_archive_text">{0}</b>
 asd_news_settings_published_by = Veröffentlichen der News für
 asd_news_settings_saved = Die Einstellungen wurden erfolgreich gespeichert
 asd_news_settings_not_saved = Ein Fehler ist aufgetreten: Einstellungen konnten nicht gespeichert werden
+asd_news_settings_update_url_control = URL-Control Einstellungen müssen noch geändert werden. <a href="{0}">Jetzt automatisch ändern</a>
+asd_news_settings_saved_url_control = URL-Control Einstellungen erfolgreich gespeichert
 
 asd_news_no_article_selected = Sie haben keinen Artikel ausgewählt, der für die News zuständig ist.
 asd_news_current_lang = ausgewählte Sprache
@@ -52,6 +54,9 @@ asd_news_faq_question_2 = Warum sehe ich keine Einstellungen mehr?
 asd_news_faq_answer_2 = Sie brauchen dafür die entsprechenden Benutzerrechte.
 
 asd_news_faq_question_3 = Kann ich weitere Felder, wie z.B. Vorschautext oder eine Galerie, einfügen?
-asd_news_faq_answer_3 = Ja! Dazu gehen Sie einfach auf <a href="index.php?page=asd_news&amp;subpage=metainfo">SQL Felder</a> und fügen wie beim Metainfo-AddOn die entsprechenden Felder ein. Man brauchst dafür die ensprechende Rechte.
+asd_news_faq_answer_3 = Ja! Dazu gehen Sie einfach auf <a href="{0}">SQL Felder</a> und fügen wie beim Metainfo-AddOn die entsprechenden Felder ein. Man brauchst dafür die ensprechende Rechte.
+
+asd_news_faq_question_4 = Ich sehe keine Kategorien / Bilder mehr. Was kann ich dagegen tun?
+asd_news_faq_answer_4 = Bitte vergewissere dich, dass du auch die entsprechenden Methoden verwendet hast. Tritt der Fehler immer noch auf, überprüfe unter "<a href="{0}">SQL Felder</a>" ob die entsprechenden Spalten auch richtig zugewiesen worden sind.
 
 submit = abschicken

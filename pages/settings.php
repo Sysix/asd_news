@@ -70,7 +70,7 @@ if ($func == 'update') {
         if (rex_asd_news_config::saveConfig()) {
             echo rex_info($I18N->msg('asd_news_settings_saved'));
             if (rex_asd_news_config::isControlPlugin() && $oldArticle != $saves['article']) {
-                echo rex_info('URL-Control Einstellungen müsen noch geändert werden. <a href="' . $BaseDir . '&amp;func=update-url-control">Jetzt automatisch ändern</a>');
+                echo rex_info($I18N->msg('sd_news_settings_update_url_control', $BaseDir . '&amp;func=update-url-control'));
             }
         } else {
             echo rex_warning($I18N->msg('asd_news_settings_not_saved'));
@@ -121,7 +121,7 @@ if ($func == 'update-url-control' && rex_asd_news_config::isControlPlugin()) {
     rex_asd_news_url_control::updateArticleId(rex_asd_news_config::getConfig('article'));
     url_generate::generatePathFile('');
 
-    echo rex_info('URL Control Plugin Einstellungen erfolgreich geändert');
+    echo rex_info($I18N->msg('asd_news_settings_saved_url_control'));
 }
 
 $sql = new rex_sql();

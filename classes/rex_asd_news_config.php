@@ -2,6 +2,8 @@
 
 class rex_asd_news_config
 {
+    const OLD_SQL_COLUMNS = '|category|picture|text|';
+
     public static $tableName;
     public static $tableNameCategory;
 

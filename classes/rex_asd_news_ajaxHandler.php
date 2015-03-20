@@ -27,7 +27,7 @@ class rex_asd_news_ajaxHandler
             $sql->setWhere('`id` = ' . $id);
         }
 
-        $sql->setValue('publishedAt', $time->format('Y-m-d H:i:s'));
+        $sql->setValue('publishedAt', $time->format('d.m.Y H:i'));
         $sql->setValue('publishedBy', $REX['USER']->getValue('user_id'));
         $sql->setValue('status', 1);
         $sql->update();

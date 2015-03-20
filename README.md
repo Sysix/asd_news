@@ -14,15 +14,18 @@ Features
 * News ab einer bestimmten Anzahl zu archivieren
 * fertige Module via Knopfdruck installieren
 
-Update 1.4.0 - DEV
+Update 1.4.0 - 20.03.15
 ------------
 * `$news->replaceSeoTags()` utf-8 Bugfix
+* `$news->getRubric()` - Methode hinzugefügt
 * Felder werden nun über das Addon `metainfo` verwaltet
 * Benutzerrecht `asd_news[metainfo]` hinzugefügt
+* Extension `ASD_NEWS_GETIMAGE` hinzugefügt
 * Unter Einstellungen: News Artikel auswählbar
+* Verbesserte Kompatibilität mit dem Plugin url_control
 * F.A.Q. Eintrag "Warum sehe ich keine Einstellungen mehr?" hinzugefügt
 * F.A.Q. Eintrag "Kann ich weitere Felder, wie z.B. Vorschautext oder eine Galerie, einfügen?" hinzugefügt
-* Extension `ASD_NEWS_GETIMAGE` hinzugefügt
+* F.A.Q. Eintrag "Ich sehe keine Kategorien / Bilder mehr. Was kann ich dagegen tun?" hinzugefügt
 * Code aufgeräumt
 
 Update 1.3.0 - 31.10.14
@@ -95,6 +98,9 @@ PHP Methoden
 * URL bekommen
 ```$url = $news->getUrl($params = array());```
 
+* Rubrik Id bekommen
+```$url = $news->getRubric();```
+
 * Rubriknamen bekommen
 ```$url = $news->getRubricName();```
 
@@ -107,7 +113,7 @@ PHP Methoden
 * Monatname bekommen
 ```$monthName = $news->getMonthName($lang = '_de');```
 
-* Meta Tags einfügen
+* HTML Meta Tags einfügen
 ```
 $news->replaceSeoTags(array(
   'keywords' => $foo,

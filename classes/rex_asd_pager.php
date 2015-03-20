@@ -115,74 +115,94 @@ class rex_asd_pager extends rex_pager
     }
 
     /**
+     * generate the html view for the pagination
      * @return string
      */
-    public function getButtons()
+    public function getPagination()
     {
         $return = array();
 
-        if ($this->getPageCount() <= 1) {
-            return '';
+        $id = '';
+        if (rex_asd_news_config::getConfig('pagination-css-id') != '') {
+            $id = ' id="' . rex_asd_news_config::getConfig('pagination-css-id') . '"';
         }
 
-        if (rex_asd_news_config::getConfig('pagination') == 'site-number') {
+        $return[] = '<ul class="pagination"' . $id . '>';
 
-            $id = '';
-            if (rex_asd_news_config::getConfig('pagination-css-id') != '') {
-                $id = ' id="' . rex_asd_news_config::getConfig('pagination-css-id') . '"';
-            }
+        // Prev Button
+        $href = rex_getUrl('', '', array($this->getCursorName() => $this->getPrevPage()));
+        $class = '';
+        if ($this->getPrevPage() == $this->getCurrentPage()) {
+            $href = '#';
+            $class = ' class="disabled"';
+        }
+        $return[] = '<li' . $class . '><a href="' . $href . '">«</a></li>';
 
-            $return[] = '<ul class="pagination"' . $id . '>';
+        for ($i = 0; $i < $this->getPageCount(); $i++) {
 
-            // Prev Button
-            $href = rex_getUrl('', '', array($this->getCursorName() => $this->getPrevPage()));
-            $class = '';
-            if ($this->getPrevPage() == $this->getCurrentPage()) {
-                $href = '#';
-                $class = ' class="disabled"';
-            }
-            $return[] = '<li' . $class . '><a href="' . $href . '">«</a></li>';
+            $active = ($i == $this->getCurrentPage()) ? ' class="active"' : '';
 
-            for ($i = 0; $i < $this->getPageCount(); $i++) {
-
-                $active = ($i == $this->getCurrentPage()) ? ' class="active"' : '';
-
-                $return[] = '<li ' . $active . '>
+            $return[] = '<li ' . $active . '>
                     <a href="' . rex_getUrl('', '', array($this->getCursorName() => $i)) . '">' . ($i + 1) . '</a>
                 </li>';
-
-            }
-
-            // Next Button
-            $href = rex_getUrl('', '', array($this->getCursorName() => $this->getNextPage()));
-            $class = '';
-            if ($this->getNextPage() == $this->getCurrentPage()) {
-                $href = '#';
-                $class = ' class="disabled"';
-            }
-            $return[] = '<li' . $class . '><a href="' . $href . '">»</a></li>';
         }
 
-        if (rex_asd_news_config::getConfig('pagination') == 'pager') {
+        // Next Button
+        $href = rex_getUrl('', '', array($this->getCursorName() => $this->getNextPage()));
+        $class = '';
+        if ($this->getNextPage() == $this->getCurrentPage()) {
+            $href = '#';
+            $class = ' class="disabled"';
+        }
+        $return[] = '<li' . $class . '><a href="' . $href . '">»</a></li>';
+        $return[] = '</ul>';
 
-            $id = '';
-            if (rex_asd_news_config::getConfig('pager-css-id') != '') {
-                $id = ' id="' . rex_asd_news_config::getConfig('pager-css-id') . '"';
-            }
+        return implode(PHP_EOL, $return);
+    }
 
-            $return[] = '<ul class="pager"' . $id . '>';
+    /**
+     * generate the html view for the pager
+     * @return string
+     */
+    public function getPager()
+    {
+        $return = array();
 
-            if ($this->getCurrentPage() != $this->getPrevPage()) {
-                $return[] = '<li class="previous"><a href="' . rex_getUrl('', '', array($this->getCursorName() => $this->getPrevPage())) . '">prev</a></li>';
-            }
+        $id = '';
+        if (rex_asd_news_config::getConfig('pager-css-id') != '') {
+            $id = ' id="' . rex_asd_news_config::getConfig('pager-css-id') . '"';
+        }
 
-            if ($this->getCurrentPage() != $this->getNextPage()) {
-                $return[] = '<li class="next"><a href="' . rex_getUrl('', '', array($this->getCursorName() => $this->getNextPage())) . '">next</a></li>';
-            }
+        $return[] = '<ul class="pager"' . $id . '>';
+
+        if ($this->getCurrentPage() != $this->getPrevPage()) {
+            $return[] = '<li class="previous"><a href="' . rex_getUrl('', '', array($this->getCursorName() => $this->getPrevPage())) . '">prev</a></li>';
+        }
+
+        if ($this->getCurrentPage() != $this->getNextPage()) {
+            $return[] = '<li class="next"><a href="' . rex_getUrl('', '', array($this->getCursorName() => $this->getNextPage())) . '">next</a></li>';
         }
 
         $return[] = '</ul>';
 
         return implode(PHP_EOL, $return);
+    }
+
+    /**
+     * @return string
+     */
+    public function getButtons()
+    {
+        if ($this->getPageCount() <= 1) {
+            return '';
+        }
+
+        switch(rex_asd_news_config::getConfig('pagination')) {
+            case 'site-number':
+                return $this->getPagination();
+            case 'pager':
+            default:
+                return $this->getPager();
+        }
     }
 }
