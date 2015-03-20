@@ -63,7 +63,11 @@ class rex_asd_news_config
      */
     public static function saveConfig()
     {
-        $config = array_merge(self::$defaultConfig, self::$config, self::$saveConfig);
+        $config = array_merge(
+            (array)self::$defaultConfig,
+            (array)self::$config,
+            (array)self::$saveConfig
+        );
 
         self::$config = $config;
 

@@ -2,7 +2,8 @@
 
 global $REX;
 
-include_once rex_path::addon('asd_news', 'classes/rex_asd_news_config.php');
+include_once __DIR__ . '/classes/rex_asd_news_config.php';
+
 rex_asd_news_config::init(
     'asd_news',
     'asd_news', // Without Prefix
@@ -38,7 +39,7 @@ if(!OOAddon::isAvailable('metainfo')) {
 
 if (OOAddon::isAvailable('metainfo') && $metaCols) {
 
-    include_once rex_path::addon(rex_asd_news_config::getName(), 'classes/metainfo/rex_asd_metainfo_install.php');
+    include_once __DIR__ . '/classes/metainfo/rex_asd_metainfo_install.php';
 
     rex_asd_metainfo_install::setProperty();
     if ($error = rex_asd_metainfo_install::addFields()) {
