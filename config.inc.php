@@ -45,7 +45,7 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
 
     // register addon
     $REX['ADDON']['name'][rex_asd_news_config::getName()] = $I18N->msg('asd_news');
-    $REX['ADDON']['version'][rex_asd_news_config::getName()] = '1.4.0 DEV';
+    $REX['ADDON']['version'][rex_asd_news_config::getName()] = '1.4.0';
     $REX['ADDON']['author'][rex_asd_news_config::getName()] = 'ArtStudioDESIGN';
     $REX['ADDON']['supportpage'][rex_asd_news_config::getName()] = 'http://redaxo.org/forum/';
     $REX['ADDON']['perm'][rex_asd_news_config::getName()] = 'asd_news[]';
