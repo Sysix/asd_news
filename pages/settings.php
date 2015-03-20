@@ -70,7 +70,7 @@ if ($func == 'update') {
         if (rex_asd_news_config::saveConfig()) {
             echo rex_info($I18N->msg('asd_news_settings_saved'));
             if (rex_asd_news_config::isControlPlugin() && $oldArticle != $saves['article']) {
-                echo rex_info($I18N->msg('sd_news_settings_update_url_control', $BaseDir . '&amp;func=update-url-control'));
+                echo rex_info($I18N->msg('asd_news_settings_update_url_control', $BaseDir . '&amp;func=update-url-control'));
             }
         } else {
             echo rex_warning($I18N->msg('asd_news_settings_not_saved'));
