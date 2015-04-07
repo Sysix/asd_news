@@ -14,6 +14,13 @@ Features
 * News ab einer bestimmten Anzahl zu archivieren
 * fertige Module via Knopfdruck installieren
 
+
+Update 1.4.2 - ??.04.15
+------------
+
+* Bugfix: News veröffentlichen
+* Bugfix: Keine News dupliziert beim einlegen einer neuen Sprache
+
 Update 1.4.0 - 20.03.15
 ------------
 * `$news->replaceSeoTags()` utf-8 Bugfix
