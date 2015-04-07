@@ -8,20 +8,40 @@ class rex_asd_news_utils
      */
     public static function addNewstoSitemap($params)
     {
+        $seoSettings = rex_asd_news_config::getSeoSettings();
+
+        $map = new ReflectionClass($seoSettings['sitemap']['class']);
+        $map = $map->newInstanceWithoutConstructor();
+
+        $freq = new ReflectionMethod($seoSettings['sitemap']['class'], 'calc_article_changefreq');
+        $freq->setAccessible(true);
+
+        $prio = new ReflectionMethod($seoSettings['sitemap']['class'], 'calc_article_priority');
+        $prio->setAccessible(true);
+
+        $mainArticle = rex_asd_news_config::getConfig('article');
+        $mainArticle = new rex_article($mainArticle);
+
         foreach (rex_asd_news::getAllNews() as $id => $news) {
             /** @var rex_asd_news $news */
 
-            $params['subject'][rexseo_parse_article_name($news->getValue('title'))][$news->getValue('clang')] = array(
+            $fragment = array(
                 'loc' => $news->getUrl(),
                 'lastmod' => $news->getPublishDate()->format('c'),
-                'changefreq' => 'monthly',
-                'priority' => '0,7',
-                'noindex' => ''
+                'changefreq' => $freq->invokeArgs($map, array(
+                    $news->getPublishDate()->getTimestamp()
+                )),
+                'priority' => $prio->invokeArgs($map, array(
+                    $mainArticle->getValue('id'),
+                    $mainArticle->getValue('clang'),
+                    $mainArticle->getValue('path') . '|' . $news->getValue('id')
+                ))
             );
 
+            $params['subject'][rex_asd_news_config::getName()][] = $fragment;
         }
 
-        die();
+        return $params['subject'];
     }
 
     public static function isImageInUse($params)
@@ -30,9 +50,9 @@ class rex_asd_news_utils
         global $I18N;
 
         $sql = new rex_sql();
-        $pictureCol = rex_asd_news_config::getConfig('sql')['picture'];
+        $sqlCols = rex_asd_news_config::getConfig('sql');
 
-        $sql->setQuery('SELECT `id`, `title` FROM `' . rex_asd_news_config::getTable() .'` WHERE `' . $pictureCol . '` = "' . $params['filename'] . '"');
+        $sql->setQuery('SELECT `id`, `title` FROM `' . rex_asd_news_config::getTable() . '` WHERE `' . $sqlCols['picture'] . '` = "' . $params['filename'] . '"');
         if ($sql->getRows()) {
             $message = $I18N->msg('asd_news') . '<br /><ul>';
 

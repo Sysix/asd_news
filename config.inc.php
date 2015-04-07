@@ -32,13 +32,13 @@ rex_asd_news_config::setSeoAddon('rexseo', 'yrewrite', 'seo42');
 if (rex_asd_news_config::isControlPlugin()) {
     require_once rex_path::addon('asd_news', 'classes/rex_asd_news_url_control.php');
 }
-
 // SEO Sitemap.xml
-/*
-rex_register_extension('REXSEO_SITEMAP_ARRAY_CREATED', function($params) {
-    rex_asd_news_utils::addNewstoSitemap($params);
-});
-*/
+$seoSettings = rex_asd_news_config::getSeoSettings();
+if ($seoSettings['sitemap']['extension']) {
+    rex_register_extension($seoSettings['sitemap']['extension'], function ($params) {
+        return rex_asd_news_utils::addNewstoSitemap($params);
+    });
+}
 
 if ($REX['REDAXO'] && is_object($REX['USER'])) {
     $I18N->appendFile(rex_path::addon(rex_asd_news_config::getName(), 'lang' . DIRECTORY_SEPARATOR));

@@ -18,9 +18,11 @@ Features
 Update 1.4.2 - ??.04.15
 ------------
 
+* Feature: Sitemap.xml Einbindung bei seo42/rexseo
 * Bugfix: News veröffentlichen
 * Bugfix: Keine News dupliziert beim einlegen einer neuen Sprache
 * Bugfix: News Bilder konnten im Medienpool gelöscht werden
+* Aufräumen: Spezifische Seo Einstellungen nun in rex_asd_news_config
 
 Update 1.4.0 - 20.03.15
 ------------

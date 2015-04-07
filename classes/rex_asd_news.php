@@ -133,50 +133,29 @@ class rex_asd_news
         $sqlCols = rex_asd_news_config::getConfig('sql');
         $pictureCol = $sqlCols['picture'];
 
-        $default = '/files/' . $this->getValue($pictureCol);
-        $defaultType = 'index.php?rex_img_type=' . $imageType . '&amp;rex_img_file=' . $this->getValue($pictureCol);
-
         if (rex_extension_is_registered('ASD_NEWS_GETIMAGE')) {
             return rex_register_extension_point('ASD_NEWS_GETIMAGE', $pictureCol);
         }
 
-        if (rex_asd_news_config::getSeoAddon() == 'seo42') {
+        $seoSettings = rex_asd_news_config::getSeoSettings();
 
-            if ($imageType != null) {
-                return seo42::getImageManagerFile($this->getValue($pictureCol), $imageType);
+        // Use SeoMethod
+        if(isset($seoSettings['image']) && $seoSettings['image']) {
+
+            if ($imageType != null && isset($seoSettings['image']['manager']) && $seoSettings['image']['manager']) {
+                return call_user_func($seoSettings['image']['manager'], $this->getValue($pictureCol), $imageType);
             }
 
-            return seo42::getMediaFile($this->getValue($pictureCol));
-
-        }
-
-        /*
-        if (self::$SEO_ADDON == 'yrewrite') {
-
-            if ($imageType != null) {
-                return $defaultType;
+            if(isset($seoSettings['image']['default']) && $seoSettings['image']['default']) {
+                return call_user_func($seoSettings['image']['default'], $this->getValue($pictureCol));
             }
-
-            return $default;
-
         }
-
-        if (self::$SEO_ADDON == 'rexseo') {
-
-            if ($imageType != null) {
-                return $defaultType;
-            }
-
-            return $default;
-
-        }
-        */
 
         if ($imageType != null) {
-            return $defaultType;
+            return 'index.php?rex_img_type=' . $imageType . '&amp;rex_img_file=' . $this->getValue($pictureCol);
         }
 
-        return $default;
+        return '/files/' . $this->getValue($pictureCol);
     }
 
     /**

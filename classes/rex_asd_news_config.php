@@ -20,6 +20,8 @@ class rex_asd_news_config
     private static $baseUrl;
 
     public static $seoAddon;
+    public static $seoSettings;
+
     public static $urlControlPlugin = false;
 
 
@@ -123,6 +125,14 @@ class rex_asd_news_config
     }
 
     /**
+     * @return array
+     */
+    public static function getSeoSettings()
+    {
+        return self::$seoSettings;
+    }
+
+    /**
      * @return bool
      */
     public static function isControlPlugin()
@@ -145,8 +155,12 @@ class rex_asd_news_config
         return true;
     }
 
+
     /**
      * set all necessary information about the addon
+     * @param $folder
+     * @param $table
+     * @param $tableCategory
      */
     public static function init($folder, $table, $tableCategory)
     {
@@ -192,12 +206,47 @@ class rex_asd_news_config
             }
         }
 
+        self::$seoSettings = self::setSeoSettings();
+
         self::$urlControlPlugin = OOPlugin::isAvailable(self::$seoAddon, 'url_control');
 
         // Kompatibilität erhalten
         rex_asd_news::$SEO_URL_CONTROL = self::$urlControlPlugin;
     }
 
-}
+    private static function setSeoSettings()
+    {
+        switch (self::$seoAddon) {
+            case 'seo42':
+                return array(
+                    'sitemap' => array(
+                        'extension' => 'SEO42_SITEMAP_ARRAY_CREATED',
+                        'class' => 'seo42_sitemap'
+                    ),
+                    'image' => array(
+                        'default' => 'seo42::getMediaFile',
+                        'manager' => 'seo42::getImageManagerFile'
+                    )
+                );
+            case 'rexseo':
+                return array(
+                    'sitemap' => array(
+                        'extension' => 'REXSEO_SITEMAP_ARRAY_CREATED',
+                        'class' => 'rexseo_sitemap'
+                    ),
+                    'image' => false
+                );
+            case 'yrewrite':
+                return array(
+                    'sitemap' => array(
+                        'extension' => false,
+                        'class' => ''
+                    ),
+                    'image' => false
+                );
+            default:
+                return false;
+        }
+    }
 
-?>
+}
