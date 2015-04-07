@@ -26,12 +26,13 @@ class rex_asd_news_utils
 
     public static function isImageInUse($params)
     {
-        global $REX;
         /** @var i18n $I18N */
         global $I18N;
 
         $sql = new rex_sql();
-        $sql->setQuery('SELECT `id`, `title` FROM `' . rex_asd_news_config::getTable() .'` WHERE `picture` = "' . $params['filename'] . '"');
+        $pictureCol = rex_asd_news_config::getConfig('sql')['picture'];
+
+        $sql->setQuery('SELECT `id`, `title` FROM `' . rex_asd_news_config::getTable() .'` WHERE `' . $pictureCol . '` = "' . $params['filename'] . '"');
         if ($sql->getRows()) {
             $message = $I18N->msg('asd_news') . '<br /><ul>';
 

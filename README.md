@@ -20,6 +20,7 @@ Update 1.4.2 - ??.04.15
 
 * Bugfix: News veröffentlichen
 * Bugfix: Keine News dupliziert beim einlegen einer neuen Sprache
+* Bugfix: News Bilder konnten im Medienpool gelöscht werden
 
 Update 1.4.0 - 20.03.15
 ------------
