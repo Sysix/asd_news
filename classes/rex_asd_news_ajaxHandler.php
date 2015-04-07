@@ -27,9 +27,10 @@ class rex_asd_news_ajaxHandler
             $sql->setWhere('`id` = ' . $id);
         }
 
-        $sql->setValue('publishedAt', $time->format('d.m.Y H:i'));
+        $sql->setValue('publishedAt', $time->format('Y-m-d H:i'));
         $sql->setValue('publishedBy', $REX['USER']->getValue('user_id'));
         $sql->setValue('status', 1);
+
         $sql->update();
 
         $sql->setQuery('SELECT * FROM `' . rex_asd_news_config::getTable() . '` WHERE `id` = ' . $id . ' AND `clang` = ' . $clang);
@@ -37,7 +38,7 @@ class rex_asd_news_ajaxHandler
         return '
         <td>' . $id . '</td>
         <td>' . $sql->getValue('title') . '</td>
-        <td><span>' . $time->format('Y-m-d H:i') . '</span></td>
+        <td><span>' . $time->format('d.m.Y H:i') . '</span></td>
         <td><a href="' . self::getBaseUrl($clang) . 'unpublish&amp;id=' . $id . '" class="rex-offline" onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">' . $I18N->msg('asd_news_unpublish') . '</a></td>
         <td><a href="' . self::getBaseUrl($clang) . 'edit&amp;id=' . $id . '">' . $I18N->msg('edit') . '</a></td>
         <td><a href="' . self::getBaseUrl($clang) . 'delete&amp;id=' . $id . '" onclick="return confirm(\'' . $I18N->msg('asd_news_really_delete') . '\');">' . $I18N->msg('delete') . '</a></td>
