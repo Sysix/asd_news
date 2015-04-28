@@ -39,7 +39,7 @@ class rex_asd_news_ajaxHandler
         <td>' . $id . '</td>
         <td>' . $sql->getValue('title') . '</td>
         <td><span>' . $time->format('d.m.Y H:i') . '</span></td>
-        <td><a href="' . self::getBaseUrl($clang) . 'unpublish&amp;id=' . $id . '" class="rex-offline" onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">' . $I18N->msg('asd_news_unpublish') . '</a></td>
+        <td><a href="' . self::getBaseUrl($clang) . 'unpublish&amp;id=' . $id . '" class="rex-online" onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">' . $I18N->msg('asd_news_unpublish') . '</a></td>
         <td><a href="' . self::getBaseUrl($clang) . 'edit&amp;id=' . $id . '">' . $I18N->msg('edit') . '</a></td>
         <td><a href="' . self::getBaseUrl($clang) . 'delete&amp;id=' . $id . '" onclick="return confirm(\'' . $I18N->msg('asd_news_really_delete') . '\');">' . $I18N->msg('delete') . '</a></td>
         <td><a href="' . self::getBaseUrl($clang) . 'status&amp;id=' . $id . '" class="rex-online">' . $I18N->msg('status_online') . '</a></td>';

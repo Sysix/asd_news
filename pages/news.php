@@ -126,13 +126,13 @@ if ($func == '') {
 
         if ($publishedAt->getTimestamp() == -62169987600 || $publishedAt->getTimestamp() === false) {
             return '
-            <span class="rex-online datepicker" data-id="###id###">' . $I18N->msg('asd_news_publish') . '</span>
+            <span class="rex-offline datepicker" data-id="###id###">' . $I18N->msg('asd_news_publish') . '</span>
             <span style="height:1px; width:1px; display:block" id="news_###id###" data-clang="' . $clang . '" value="' . $now->format('d/m/Y H:i') . '"></span>';
         }
 
         $url = $list->getParsedUrl(array('func' => 'unpublish', 'id' => '###id###'));
 
-        return '<a href="' . $url . '" class="rex-offline" onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">' . $I18N->msg('asd_news_unpublish') . '</a>';
+        return '<a href="' . $url . '" class="rex-online" onclick="return confirm(\'' . $I18N->msg('asd_news_really_unpublish') . '\');">' . $I18N->msg('asd_news_unpublish') . '</a>';
 
     });
 
