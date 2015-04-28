@@ -19,6 +19,7 @@ Update 1.4.2 - ??.04.15
 ------------
 
 * Feature: Sitemap.xml Einbindung bei seo42/rexseo
+* Feature: Admin's brauchen keine extra rechte mehr.
 * Bugfix: News veröffentlichen
 * Bugfix: Keine News dupliziert beim einlegen einer neuen Sprache
 * Bugfix: News Bilder konnten im Medienpool gelöscht werden

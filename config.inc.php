@@ -80,8 +80,9 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
         'subpage' => 'settings'
     ));
     $settings->setHref('index.php?page=' . rex_asd_news_config::getName() . '&subpage=settings');
-    $settings->setRequiredPermissions(array(rex_asd_news_config::getName() . '[settings]'));
-
+    if (!$REX['USER']->isAdmin()) {
+        $settings->setRequiredPermissions(array(rex_asd_news_config::getName() . '[settings]'));
+    }
 
     $REX['ADDON']['pages'][rex_asd_news_config::getName()] = array($news, $rubric, $faq, $settings);
 
@@ -91,7 +92,9 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
             'subpage' => 'metainfo'
         ));
         $meta->setHref('index.php?page=' . rex_asd_news_config::getName() . '&subpage=metainfo');
-        $meta->setRequiredPermissions(array(rex_asd_news_config::getName() . '[metainfo]'));
+        if (!$REX['USER']->isAdmin()) {
+            $meta->setRequiredPermissions(array(rex_asd_news_config::getName() . '[metainfo]'));
+        }
 
         $REX['ADDON']['pages'][rex_asd_news_config::getName()][] = $meta;
 
