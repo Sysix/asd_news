@@ -140,13 +140,13 @@ class rex_asd_news
         $seoSettings = rex_asd_news_config::getSeoSettings();
 
         // Use SeoMethod
-        if(isset($seoSettings['image']) && $seoSettings['image']) {
+        if (isset($seoSettings['image']) && $seoSettings['image']) {
 
             if ($imageType != null && isset($seoSettings['image']['manager']) && $seoSettings['image']['manager']) {
                 return call_user_func($seoSettings['image']['manager'], $this->getValue($pictureCol), $imageType);
             }
 
-            if(isset($seoSettings['image']['default']) && $seoSettings['image']['default']) {
+            if (isset($seoSettings['image']['default']) && $seoSettings['image']['default']) {
                 return call_user_func($seoSettings['image']['default'], $this->getValue($pictureCol));
             }
         }
@@ -169,14 +169,14 @@ class rex_asd_news
 
         $params = array_merge(array(
             'news-id' => $this->getValue('id'),
-            'clang' => $REX['CUR_CLANG'],
+            'clang' => $this->getValue('clang'),
             'article-id' => rex_asd_news_config::getConfig('article', $REX['ARTICLE_ID'])
         ), $params);
 
         $params = rex_register_extension_point('ASD_NEWS_GENERATE_URL', $params);
 
         if (rex_asd_news_config::isControlPlugin()) {
-            return url_generate::getUrlById(rex_asd_news_config::getTable(), $this->getValue('news_id'));
+            return $this->getRealControlUrl();
         }
 
         $art_id = $params['article-id'];
@@ -185,6 +185,26 @@ class rex_asd_news
         unset($params['article-id'], $params['clang']);
 
         return rex_getUrl($art_id, $clang, $params);
+    }
+
+    /**
+     * return the real generated url
+     * @return bool|string
+     */
+    public function getRealControlUrl()
+    {
+        if (class_exists('url_generate')) {
+            $mainArticle = rex_asd_news_config::getConfig('article');
+            $list = url_generate::$paths[rex_asd_news_config::getTable()][$mainArticle];
+
+            if (isset($list[$this->getValue('clang')]) &&
+                isset($list[$this->getValue('clang')][$this->getValue('id')])
+            ) {
+                return url_generate::getCleanUrl($list[$this->getValue('clang')][$this->getValue('id')]);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -349,6 +369,7 @@ class rex_asd_news
         return self::getByWhere(array(
             'id' => 'IN (' . implode(',', (array)$newsIds) . ')'
         ), $clang);
+
     }
 
     /**
@@ -471,7 +492,7 @@ class rex_asd_news
     {
         $where = array();
         foreach ($whereArray as $name => $condition) {
-            if($condition === null) {
+            if ($condition === null) {
                 continue;
             }
             $where[] = '`' . $name . '` ' . $condition;

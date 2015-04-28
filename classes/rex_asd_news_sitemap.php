@@ -16,11 +16,8 @@ class rex_asd_news_sitemap
         )) as $news) {
             /** @var rex_asd_news $news */
 
-            if(!$url = self::getRealControlUrl($news->getValue('id'), $news->getValue('clang'))) {
-                $url = $news->getUrl();
-            }
             $fragment = array(
-                'loc' => $url,
+                'loc' => $news->getUrl(),
                 'lastmod' => $news->getPublishDate()->format('c'),
                 'changefreq' => self::calc_article_changefreq($news->getPublishDate()->getTimestamp()),
                 'priority' => self::calc_article_priority(
@@ -36,27 +33,7 @@ class rex_asd_news_sitemap
         return $params['subject'];
     }
 
-    /**
-     * @param $newsId
-     * @param $clang
-     * @return bool|string
-     */
-    public static function getRealControlUrl($newsId, $clang)
-    {
-        if (class_exists('url_generate')) {
-            $list = url_generate::$paths[rex_asd_news_config::getTable()];
 
-            $mainArticle = rex_asd_news_config::getConfig('article');
-
-            if (isset($list[$mainArticle]) && isset($list[$mainArticle][$clang])) {
-                if (isset($list[$mainArticle][$clang][$newsId])) {
-                    return $list[$mainArticle][$clang][$newsId];
-                }
-            }
-        }
-
-        return false;
-    }
 
     /**
      * CALCULATE ARTICLE PRIORITY
