@@ -176,7 +176,7 @@ class rex_asd_news
         $params = rex_register_extension_point('ASD_NEWS_GENERATE_URL', $params);
 
         if (rex_asd_news_config::isControlPlugin()) {
-            return url_generate::getUrlById(rex_asd_news_config::getTable(), $this->getValue('id'));
+            return url_generate::getUrlById(rex_asd_news_config::getTable(), $this->getValue('news_id'));
         }
 
         $art_id = $params['article-id'];
@@ -417,7 +417,7 @@ class rex_asd_news
      * @param int|null $clang
      * @return array
      */
-    private static function getByWhere(array $where, $clang = null)
+    public static function getByWhere(array $where, $clang = null)
     {
         global $REX;
 
@@ -471,6 +471,9 @@ class rex_asd_news
     {
         $where = array();
         foreach ($whereArray as $name => $condition) {
+            if($condition === null) {
+                continue;
+            }
             $where[] = '`' . $name . '` ' . $condition;
         }
 

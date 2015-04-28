@@ -220,8 +220,7 @@ class rex_asd_news_config
             case 'seo42':
                 return array(
                     'sitemap' => array(
-                        'extension' => 'SEO42_SITEMAP_ARRAY_CREATED',
-                        'class' => 'seo42_sitemap'
+                        'extension' => 'SEO42_SITEMAP_ARRAY_CREATED'
                     ),
                     'image' => array(
                         'default' => 'seo42::getMediaFile',
@@ -231,16 +230,14 @@ class rex_asd_news_config
             case 'rexseo':
                 return array(
                     'sitemap' => array(
-                        'extension' => 'REXSEO_SITEMAP_ARRAY_CREATED',
-                        'class' => 'rexseo_sitemap'
+                        'extension' => 'REXSEO_SITEMAP_ARRAY_CREATED'
                     ),
                     'image' => false
                 );
             case 'yrewrite':
                 return array(
                     'sitemap' => array(
-                        'extension' => false,
-                        'class' => ''
+                        'extension' => false
                     ),
                     'image' => false
                 );

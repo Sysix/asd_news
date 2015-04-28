@@ -35,8 +35,9 @@ if (rex_asd_news_config::isControlPlugin()) {
 // SEO Sitemap.xml
 $seoSettings = rex_asd_news_config::getSeoSettings();
 if ($seoSettings['sitemap']['extension']) {
+    include_once rex_path::addon(rex_asd_news_config::getName(), 'classes/rex_asd_news_sitemap.php');
     rex_register_extension($seoSettings['sitemap']['extension'], function ($params) {
-        return rex_asd_news_utils::addNewstoSitemap($params);
+        return rex_asd_news_sitemap::addNewstoSitemap($params);
     });
 }
 
@@ -45,7 +46,7 @@ if ($REX['REDAXO'] && is_object($REX['USER'])) {
 
     // register addon
     $REX['ADDON']['name'][rex_asd_news_config::getName()] = $I18N->msg('asd_news');
-    $REX['ADDON']['version'][rex_asd_news_config::getName()] = '1.4.0';
+    $REX['ADDON']['version'][rex_asd_news_config::getName()] = '1.4.2';
     $REX['ADDON']['author'][rex_asd_news_config::getName()] = 'ArtStudioDESIGN';
     $REX['ADDON']['supportpage'][rex_asd_news_config::getName()] = 'http://redaxo.org/forum/';
     $REX['ADDON']['perm'][rex_asd_news_config::getName()] = 'asd_news[]';

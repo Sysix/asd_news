@@ -5,45 +5,8 @@ class rex_asd_news_utils
 
     /**
      * @param array $params
+     * @return array
      */
-    public static function addNewstoSitemap($params)
-    {
-        $seoSettings = rex_asd_news_config::getSeoSettings();
-
-        $map = new ReflectionClass($seoSettings['sitemap']['class']);
-        $map = $map->newInstanceWithoutConstructor();
-
-        $freq = new ReflectionMethod($seoSettings['sitemap']['class'], 'calc_article_changefreq');
-        $freq->setAccessible(true);
-
-        $prio = new ReflectionMethod($seoSettings['sitemap']['class'], 'calc_article_priority');
-        $prio->setAccessible(true);
-
-        $mainArticle = rex_asd_news_config::getConfig('article');
-        $mainArticle = new rex_article($mainArticle);
-
-        foreach (rex_asd_news::getAllNews() as $id => $news) {
-            /** @var rex_asd_news $news */
-
-            $fragment = array(
-                'loc' => $news->getUrl(),
-                'lastmod' => $news->getPublishDate()->format('c'),
-                'changefreq' => $freq->invokeArgs($map, array(
-                    $news->getPublishDate()->getTimestamp()
-                )),
-                'priority' => $prio->invokeArgs($map, array(
-                    $mainArticle->getValue('id'),
-                    $mainArticle->getValue('clang'),
-                    $mainArticle->getValue('path') . '|' . $news->getValue('id')
-                ))
-            );
-
-            $params['subject'][rex_asd_news_config::getName()][] = $fragment;
-        }
-
-        return $params['subject'];
-    }
-
     public static function isImageInUse($params)
     {
         /** @var i18n $I18N */
