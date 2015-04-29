@@ -208,8 +208,9 @@ class rex_asd_news_config
 
         self::$seoSettings = self::setSeoSettings();
 
-        self::$urlControlPlugin = OOPlugin::isAvailable(self::$seoAddon, 'url_control');
-
+        if (self::$seoAddon) {
+            self::$urlControlPlugin = OOPlugin::isAvailable(self::$seoAddon, 'url_control');
+        }
         // Kompatibilität erhalten
         rex_asd_news::$SEO_URL_CONTROL = self::$urlControlPlugin;
     }
@@ -242,7 +243,12 @@ class rex_asd_news_config
                     'image' => false
                 );
             default:
-                return false;
+                return array(
+                    'sitemap' => array(
+                        'extension' => false
+                    ),
+                    'image' => false
+                );
         }
     }
 

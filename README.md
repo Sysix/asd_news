@@ -15,6 +15,11 @@ Features
 * fertige Module via Knopfdruck installieren
 
 
+Update 1.4.3 - 29.04.15
+------------
+
+* Hotfix: Wenn kein Seo Addon installiert, crashte das ganze System
+
 Update 1.4.2 - 29.04.15
 ------------
 
