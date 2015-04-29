@@ -19,11 +19,13 @@ Update 1.4.2 - ??.04.15
 ------------
 
 * Feature: Sitemap.xml Einbindung bei seo42/rexseo
-* Feature: Admin's brauchen keine extra rechte mehr.
+* Feature: Admin's brauchen keine extra rechte mehr
+* Bugfix: Datepicker sendet nun nurnoch wenn eine Zeit ausgewählt ist
 * Bugfix: News veröffentlichen
 * Bugfix: Keine News dupliziert beim einlegen einer neuen Sprache
 * Bugfix: News Bilder konnten im Medienpool gelöscht werden
 * Aufräumen: Spezifische Seo Einstellungen nun in rex_asd_news_config
+* Typo: Veröffentlichen/Unveröffentlichen
 
 Update 1.4.0 - 20.03.15
 ------------
