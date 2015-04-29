@@ -173,7 +173,8 @@ if ($func == '') {
                 formatDate: "d.m.Y",
                 dayOfWeekStart: 1,
                 lang: "de",
-                onClose: function() {
+                step: 30,
+                onSelectTime: function() {
                   $.post("index.php", {
                     page: "asd_news",
                     func: "publish",
