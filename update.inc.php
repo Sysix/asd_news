@@ -2,8 +2,9 @@
 
 global $REX;
 
-include_once __DIR__ . '/classes/rex_asd_news_config.php';
-
+if (!class_exists('rex_asd_news_config')) {
+    include_once __DIR__ . '/classes/rex_asd_news_config.php';
+}
 rex_asd_news_config::init(
     'asd_news',
     'asd_news', // Without Prefix
@@ -32,7 +33,7 @@ foreach ($rows as $row) {
     }
 }
 
-if(!OOAddon::isAvailable('metainfo')) {
+if (!OOAddon::isAvailable('metainfo')) {
     $REX['ADDON']['update'][rex_asd_news_config::getName()] = 0;
     $REX['ADDON']['updatemsg'][rex_asd_news_config::getName()] = 'Metainfo Addon nicht gefunden';
 }

@@ -15,7 +15,7 @@ Features
 * fertige Module via Knopfdruck installieren
 
 
-Update 1.4.2 - ??.04.15
+Update 1.4.2 - 29.04.15
 ------------
 
 * Feature: Sitemap.xml Einbindung bei seo42/rexseo
