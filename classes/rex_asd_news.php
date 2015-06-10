@@ -79,6 +79,8 @@ class rex_asd_news
 
     /**
      * @see rex_sql::getValue
+     * @param string $name
+     * @param mixed $default
      * @return string
      */
     public function getValue($name, $default = null)
@@ -238,9 +240,20 @@ class rex_asd_news
     }
 
     /**
+     * @deprecated
+     * @since v1.5
+     * @param array $tagNames
+     * @return mixed
+     */
+    public static function replaceSeoTags(array $tagNames)
+    {
+        return static::replaceMetaTags($tagNames);
+    }
+
+    /**
      * replace the meta keywords, description html tags
      *
-     * replaceSeoTags(array(
+     * replaceMetaTags(array(
      *   'keywords' => $news->getValue('keywords')
      *   'description' => $news->getValue('description')
      *   'og:description' => $news->getValue('facebook_description')
@@ -249,13 +262,11 @@ class rex_asd_news
      * @param array $tagNames
      * @return string|bool
      */
-    public function replaceSeoTags(array $tagNames)
+    public static function replaceMetaTags(array $tagNames)
     {
-        $self = $this;
-
         $tagNames = rex_register_extension_point('ASD_NEWS_SEOTAGS', $tagNames);
 
-        rex_register_extension('OUTPUT_FILTER', function ($subject) use ($tagNames, $self) {
+        rex_register_extension('OUTPUT_FILTER', function ($subject) use ($tagNames) {
 
             try {
 
@@ -317,6 +328,7 @@ class rex_asd_news
                 echo rex_warning($e->getMessage());
             }
 
+            return $subject['subject'];
         });
 
         return false;

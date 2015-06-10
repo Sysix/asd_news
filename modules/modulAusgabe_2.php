@@ -13,7 +13,7 @@ if ($news_id) {
     $title = $news->getValue('title');
     $id = $news->getValue('id');
 
-    $news->replaceSeoTags(array(
+    $news->replaceMetaTags(array(
         'keywords' => '',
         'og:image' => $news->getImage(),
         'og:published_time' => $date->format('c'),
