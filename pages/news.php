@@ -113,7 +113,7 @@ if ($func == '') {
 
         $value = $publishedAt->format('d.m.Y H:i');
 
-        if ($publishedAt->getTimestamp() == -62169987600 || $publishedAt->getTimestamp() === false) {
+        if ($list->getValue('publishedAt') == '0000-00-00 00:00:00') {
             return '';
         }
 
@@ -124,7 +124,7 @@ if ($func == '') {
     $list->setColumnFormat('publishCol', 'custom', function ($params) use ($list, $clang, $now, $I18N) {
         $publishedAt = new DateTime($list->getValue('publishedAt'));
 
-        if ($publishedAt->getTimestamp() == -62169987600 || $publishedAt->getTimestamp() === false) {
+        if ($list->getValue('publishedAt') == '0000-00-00 00:00:00') {
             return '
             <span class="rex-offline datepicker" data-id="###id###">' . $I18N->msg('asd_news_unpublished') . '</span>
             <span style="height:1px; width:1px; display:block" id="news_###id###" data-clang="' . $clang . '" value="' . $now->format('d/m/Y H:i') . '"></span>';
