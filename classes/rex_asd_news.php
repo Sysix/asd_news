@@ -241,7 +241,7 @@ class rex_asd_news
 
     /**
      * @deprecated
-     * @since v1.5
+     * @since v1.4.4
      * @param array $tagNames
      * @return mixed
      */

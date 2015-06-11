@@ -1,19 +1,27 @@
 ASD News AddOn für REDAXO 4.6+
 ==============================
 
+Ein News AddOn der Besonderen Art.
+
 Features
 --------
 
 * Kompatibel mit SEO AddOns "seo42", "yrewrite", "rexseo"
 * Kompatibel mit Plugin "url_control"
 * Mehrsprachigkeit
-* Erweiterung von Meta-Tags möglich (siehe `rex_asd_news::replaceSeoTags()`)
+* Erweiterung von Meta-Tags möglich (siehe `rex_asd_news::replaceMetaTags()`)
 * Erweiterung von Feldern möglich (dank das Metainfo-Addon)
 * SEO42 Image Manager Urls möglich
 * On/Off Schaltung von News
 * News ab einer bestimmten Anzahl zu archivieren
 * fertige Module via Knopfdruck installieren
 
+
+Update 1.4.4 - **.06.15
+------------
+
+* Bugfix: Unter bestimmten Einstellungen, konnten keine News veröffentlicht werden
+* Rename: replaceSeoTags unbenannt in replaceMetaTags, diese Methode ist nun auch Statisch
 
 Update 1.4.3 - 29.04.15
 ------------
@@ -88,53 +96,3 @@ Update 1.1.0 - 25.09.14
 
 Version 1.0.0 - 23.09.14
 -------------
-
-PHP Methoden
-------------
-
-* Einzelne News
-```$news = rex_asd_news::getNewsById((int)$id);```
-
-* Mehrere News
-```$news = rex_asd_news::getNewsByIds(array(1, 2, 3, 4));```
-
-* Alle News
-```$news = rex_asd_news::getAllNews();```
-
-* Archivierte News 
-```$news = rex_asd_news::getArchiveNews();```
-
-* Mehrere News von einer Kategorie
-```$news = rex_asd_news::getNewsByCategory((int)$catId);```
-
-* News ID bekommen
-```$newsId = rex_asd_news::getNewsId();```
-
-* SQL Spalte bekommen (siehe `rex_sql::getValue`)
-```$title = $news->getValue('title', $default = null);```
-
-* URL bekommen
-```$url = $news->getUrl($params = array());```
-
-* Rubrik Id bekommen
-```$url = $news->getRubric();```
-
-* Rubriknamen bekommen
-```$url = $news->getRubricName();```
-
-* PublishDate bekommen als DateTime Objekt
-```$date = $news->getPublishDate();```
-
-* Überprüfen ob News online
-``` $news->isOnline()) ```
-
-* Monatname bekommen
-```$monthName = $news->getMonthName($lang = '_de');```
-
-* HTML Meta Tags einfügen
-```
-$news->replaceSeoTags(array(
-  'keywords' => $foo,
-  'og:image' => $news->getImage()
-));
-```
